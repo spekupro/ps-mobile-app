@@ -4,7 +4,7 @@ import GlobalProvider from '@/context/GlobalProvider';
 
 const RootLayout = () => {
     return (
-        <GlobalProvider value={undefined}>
+        <GlobalProvider>
             <Stack>
                 <Stack.Screen name="index" options={{ headerShown: false }} />
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

@@ -15,7 +15,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Redirect, useRouter } from 'expo-router';
 import { useGlobalContext } from '@/context/GlobalProvider';
 
-
 const App = () => {
     const { isLoggedIn, setIsLoggedIn } = useGlobalContext();
 
