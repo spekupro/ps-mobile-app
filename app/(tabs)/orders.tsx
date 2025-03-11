@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Text, TextInput, View, FlatList } from 'react-native';
+import { SafeAreaView, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import apiClient from '@/services/api.client';
-import CustomButton from '@/components/CustomButton';
 import { OrderInterface } from '@/types/order.interface';
+import StatusLozenge, { getOrderStatusColor } from '@/components/StatusLozenge';
+import { formatDate } from '@/utils/helpers/date.helper';
+import icons from '@/constants/icons';
+import CustomTextInput from '@/components/CustomTextInput';
 
 const OrdersScreen = () => {
     const { isLoading, setIsLoading } = useGlobalContext();
@@ -44,11 +47,11 @@ const OrdersScreen = () => {
             <View className="p-6">
                 <Text className="text-3xl font-bold color-neutral-60 ">Orders</Text>
 
-                <TextInput
-                    className="border border-gray-300 rounded-md p-4 mt-6"
+                <CustomTextInput
                     placeholder="Search by Order ID"
                     value={searchQuery}
-                    onChangeText={setSearchQuery}
+                    image={icons.SearchIcon}
+                    handleChangeText={setSearchQuery}
                 />
             </View>
 
@@ -58,22 +61,23 @@ const OrdersScreen = () => {
                 keyExtractor={(item) => item.uuid.toString()}
                 ListEmptyComponent={<Text className="text-center text-gray-500">No orders found</Text>}
                 renderItem={({ item }) => (
-                    <View className="border border-gray-200 rounded-md p-4 mb-2 bg-gray-50">
-                        <Text className="text-lg font-semibold">Order ID: {item.merchantReference}</Text>
-                        <Text>Amount: {item.grandTotal}€</Text>
-                        <Text>Payment Method: {item.paymentMethodType}</Text>
-                    </View>
+                    <TouchableOpacity
+                        className="border border-neutral-30 rounded-md p-4 mb-2 flex-row justify-between items-center"
+                        onPress={() => console.log('Navigate to order details', item.uuid)}
+                    >
+                        <View className="flex-1">
+                            <Text className="text-lg font-semibold">Order ID: {item.merchantReference}</Text>
+                            <Text>Amount: {item.currency + ' ' + item.grandTotal}</Text>
+                            <Text>Method: {item.paymentMethodType}</Text>
+                            <Text>Date: {formatDate(item.createdAt)}</Text>
+                        </View>
+
+                        <View className="items-end">
+                            <StatusLozenge status={item.paymentStatus} type={getOrderStatusColor(item.paymentStatus)} />
+                        </View>
+                    </TouchableOpacity>
                 )}
             />
-            <View className="px-6">
-                <CustomButton
-                    title="Refresh"
-                    containerStyles="border-2 border-neutral-30 w-[120px] my-4"
-                    textStyles="text-neutral-60"
-                    handlePress={fetchOrders}
-                    isLoading={isLoading}
-                />
-            </View>
         </SafeAreaView>
     );
 };
