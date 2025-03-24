@@ -5,6 +5,8 @@ import EyeIcon from '../assets/icons/eye.png';
 import EyeOffIcon from '../assets/icons/eye-off.png';
 import MailIcon from '../assets/icons/mail.png';
 import SearchIcon from '../assets/icons/search.png';
+import PlusIcon from '../assets/icons/plus.png';
+import PaymentIcon from '../assets/icons/payment.png';
 
 export default {
     StoreIcon,
@@ -14,4 +16,6 @@ export default {
     EyeOffIcon,
     MailIcon,
     SearchIcon,
+    PlusIcon,
+    PaymentIcon,
 };

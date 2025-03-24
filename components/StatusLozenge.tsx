@@ -36,14 +36,12 @@ const statusColors: Record<string, string> = {
 };
 
 const StatusLozenge: React.FC<StatusLozengeProps> = ({ status, type }) => {
-    console.log(status);
-    console.log(type);
     const colors = statusColors[type];
 
     return (
         <View className={``}>
             <Text
-                className={`text-xs px-2 py-1 rounded-xl ${colors}`}>
+                className={`text-xs px-2 py-2 rounded-xl ${colors}`}>
                 {status}
             </Text>
         </View>

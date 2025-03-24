@@ -62,14 +62,14 @@ const OrdersScreen = () => {
                 ListEmptyComponent={<Text className="text-center text-gray-500">No orders found</Text>}
                 renderItem={({ item }) => (
                     <TouchableOpacity
-                        className="border border-neutral-30 rounded-md p-4 mb-2 flex-row justify-between items-center"
+                        className="border border-neutral-30 rounded-xl p-4 mb-3 flex-row justify-between items-center shadow-sm shadow-neutral-30"
                         onPress={() => console.log('Navigate to order details', item.uuid)}
                     >
                         <View className="flex-1">
                             <Text className="text-lg font-semibold">Order ID: {item.merchantReference}</Text>
                             <Text>Amount: {item.currency + ' ' + item.grandTotal}</Text>
                             <Text>Method: {item.paymentMethodType}</Text>
-                            <Text>Date: {formatDate(item.createdAt)}</Text>
+                            <Text className={'text-neutral-50'}>Date: {formatDate(item.createdAt)}</Text>
                         </View>
 
                         <View className="items-end">
