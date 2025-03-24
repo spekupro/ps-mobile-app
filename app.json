@@ -4,7 +4,7 @@
     "slug": "ps-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/montonio-blue-icon.png",
+    "icon": "./assets/images/montonio-icon-blue.png",
     "scheme": "ps-mobile-app",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -19,7 +19,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/montonio-blue-icon.png"
+      "favicon": "./assets/images/montonio-icon-blue.png"
     },
     "plugins": [
       "expo-router",
