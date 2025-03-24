@@ -1,6 +1,6 @@
 import React from 'react';
-import { Tabs, Redirect } from 'expo-router';
-import { View, Image, Text, ImageSourcePropType } from 'react-native';
+import { Tabs } from 'expo-router';
+import { View, Image, ImageSourcePropType } from 'react-native';
 import icons from '@/constants/icons';
 
 interface TabIconProps {
@@ -29,15 +29,15 @@ const TabsLayout = () => {
                 }}
             >
                 <Tabs.Screen
-                    name="stores"
+                    name="products"
                     options={{
-                        tabBarLabel: 'Stores',
+                        tabBarLabel: 'Products',
                         headerShown: false,
                         tabBarIcon: ({ color, focused }) => (
                             <TabIcon
                                 icon={icons.StoreIcon}
                                 color={color}
-                                name={'Stores'}
+                                name={'Products'}
                                 focused={focused}
                             />
                         ),

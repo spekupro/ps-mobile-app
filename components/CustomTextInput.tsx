@@ -3,8 +3,8 @@ import { Text, View, TextInput, TouchableOpacity, Image, ImageSourcePropType, Ke
 
 import icons from '@/constants/icons';
 
-interface FormFieldProps {
-    title: string,
+interface TextInputProps {
+    title?: string,
     handleChangeText?: (input: string) => void,
     value?: string,
     placeholder?: string,
@@ -13,7 +13,7 @@ interface FormFieldProps {
     image?: ImageSourcePropType,
 }
 
-const FormField: React.FC<FormFieldProps> = (
+const CustomTextInput: React.FC<TextInputProps> = (
     {
         title,
         handleChangeText,
@@ -22,7 +22,7 @@ const FormField: React.FC<FormFieldProps> = (
         placeholder,
         keyboardType,
         image,
-    }: FormFieldProps) => {
+    }: TextInputProps) => {
     const [showPassword, setShowPassword] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
 
@@ -69,4 +69,4 @@ const FormField: React.FC<FormFieldProps> = (
     );
 };
 
-export default FormField;
+export default CustomTextInput;
