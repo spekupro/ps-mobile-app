@@ -14,6 +14,7 @@ import icons from '@/constants/icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Redirect, useRouter } from 'expo-router';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import apiClient from '@/services/api.client';
 
 const App = () => {
     const { isLoggedIn, setIsLoggedIn } = useGlobalContext();
@@ -30,7 +31,7 @@ const App = () => {
 
     const router = useRouter();
 
-    const submit = () => {
+    const submit = async () => {
         if (!form.email || !form.password) {
             Alert.alert('Error', 'Please enter a valid email');
             return;
@@ -41,8 +42,12 @@ const App = () => {
         try {
             console.log(form.email);
             console.log(form.password);
-            router.replace('/orders');
+            await apiClient.post<any>('/auth/password-login', {
+                email: form.email,
+                password: form.password,
+            });
             setIsLoggedIn(true);
+            router.replace('/orders');
         } catch (e) {
             //Alert.alert('Error', e.message);
             console.log(e);

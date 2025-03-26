@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { SafeAreaView, Text, View, FlatList, TouchableOpacity, Pressable } from 'react-native';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import apiClient from '@/services/api.client';
 import { OrderInterface } from '@/types/order.interface';
@@ -18,7 +18,7 @@ const OrdersScreen = () => {
     const fetchOrders = async () => {
         try {
             setIsLoading(true);
-            const response = await apiClient.get<OrderInterface[]>('/orders/?limit=10&offset=0&orderBy=createdAt&order=DESC');
+            const response = await apiClient.get<OrderInterface[]>('stargate/orders/?limit=10&offset=0&orderBy=createdAt&order=DESC');
             setOrders(response.data);
         } catch (err) {
             setError('Failed to fetch orders');

@@ -36,7 +36,7 @@ const CustomTextInput: React.FC<TextInputProps> = (
                 ${isFocused ? 'border-primary-30' : 'border-neutral-30'}`}
             >
                 <TextInput
-                    className="flex-1 text-neutral-60"
+                    className="flex-1 text-neutral-60 h-full"
                     value={value}
                     placeholder={placeholder}
                     placeholderTextColor="#94A3B8"
