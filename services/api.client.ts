@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { generateJWT } from '@/services/jwt.service';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_STARGATE_API_URL;
+const API_BASE_URL = process.env.EXPO_PUBLIC_MAINFRAME_API_URL;
 
 const apiClient = axios.create({
     baseURL: API_BASE_URL,
@@ -11,7 +11,7 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use(async (config) => {
-    const tokenData = { aud: 'stargate' };
+    const tokenData = { aud: 'mainframe' };
     const jwtToken = generateJWT(tokenData);
 
     config.headers.Authorization = `Bearer ${jwtToken}`;
