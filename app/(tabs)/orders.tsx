@@ -54,6 +54,12 @@ const OrdersScreen = () => {
                     handleChangeText={setSearchQuery}
                 />
             </View>
+            {/*<Pressable*/}
+            {/*    onPress={fetchOrders}*/}
+            {/*    className="mt-4 bg-primary rounded-lg py-3 flex items-center"*/}
+            {/*>*/}
+            {/*    <Text className="text-white font-semibold text-lg">Fetch Orders</Text>*/}
+            {/*</Pressable>*/}
 
             <FlatList
                 className="px-6"
@@ -66,9 +72,8 @@ const OrdersScreen = () => {
                         onPress={() => console.log('Navigate to order details', item.uuid)}
                     >
                         <View className="flex-1">
-                            <Text className="text-lg font-semibold">Order ID: {item.merchantReference}</Text>
-                            <Text>Amount: {item.currency + ' ' + item.grandTotal}</Text>
-                            <Text>Method: {item.paymentMethodType}</Text>
+                            <Text className="text-lg font-semibold">{item.merchantReference}</Text>
+                            <Text>{item.currency + ' ' + item.grandTotal}</Text>
                             <Text className={'text-neutral-50'}>Date: {formatDate(item.createdAt)}</Text>
                         </View>
 
