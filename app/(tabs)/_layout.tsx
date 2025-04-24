@@ -32,20 +32,6 @@ const TabsLayout = () => {
                 }}
             >
                 <Tabs.Screen
-                    name="products"
-                    options={{
-                        tabBarLabel: 'Products',
-                        headerShown: false,
-                        tabBarIcon: ({ color, focused }) => (
-                            <TabIcon
-                                icon={icons.StoreIcon}
-                                color={color}
-                                name={'Products'}
-                                focused={focused}
-                            />
-                        ),
-                    }} />
-                <Tabs.Screen
                     name="orders"
                     options={{
                         tabBarLabel: 'Orders',
@@ -55,6 +41,20 @@ const TabsLayout = () => {
                                 icon={icons.OrdersIcon}
                                 color={color}
                                 name={'Orders'}
+                                focused={focused}
+                            />
+                        ),
+                    }} />
+                <Tabs.Screen
+                    name="payment-links"
+                    options={{
+                        tabBarLabel: 'Payment Links',
+                        headerShown: false,
+                        tabBarIcon: ({ color, focused }) => (
+                            <TabIcon
+                                icon={icons.PaymentIcon}
+                                color={color}
+                                name={'Payment Links'}
                                 focused={focused}
                             />
                         ),
@@ -71,15 +71,15 @@ const TabsLayout = () => {
                     }}
                 />
                 <Tabs.Screen
-                    name="payment-links"
+                    name="products"
                     options={{
-                        tabBarLabel: 'Payment Links',
+                        tabBarLabel: 'Products',
                         headerShown: false,
                         tabBarIcon: ({ color, focused }) => (
                             <TabIcon
-                                icon={icons.PaymentIcon}
+                                icon={icons.StoreIcon}
                                 color={color}
-                                name={'Payment Links'}
+                                name={'Products'}
                                 focused={focused}
                             />
                         ),
