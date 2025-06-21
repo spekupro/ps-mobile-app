@@ -7,6 +7,7 @@ import MailIcon from '../assets/icons/mail.png';
 import SearchIcon from '../assets/icons/search.png';
 import PlusIcon from '../assets/icons/plus.png';
 import PaymentIcon from '../assets/icons/payment.png';
+import ChevronLeftIcon from '../assets/icons/chevron-left.png';
 
 export default {
     StoreIcon,
@@ -18,4 +19,5 @@ export default {
     SearchIcon,
     PlusIcon,
     PaymentIcon,
+    ChevronLeftIcon,
 };

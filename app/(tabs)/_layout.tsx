@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { View, Image, ImageSourcePropType, TouchableOpacity, Pressable } from 'react-native';
+import { View, Image, ImageSourcePropType } from 'react-native';
 import icons from '@/constants/icons';
 
 interface TabIconProps {
@@ -32,7 +32,7 @@ const TabsLayout = () => {
                 }}
             >
                 <Tabs.Screen
-                    name="orders"
+                    name="orders/orders"
                     options={{
                         tabBarLabel: 'Orders',
                         headerShown: false,
@@ -46,7 +46,7 @@ const TabsLayout = () => {
                         ),
                     }} />
                 <Tabs.Screen
-                    name="payment-links"
+                    name="payment-links/payment-links"
                     options={{
                         tabBarLabel: 'Payment Links',
                         headerShown: false,
@@ -60,7 +60,7 @@ const TabsLayout = () => {
                         ),
                     }} />
                 <Tabs.Screen
-                    name="create-payment-link"
+                    name="payment-links/payment-link"
                     options={{
                         tabBarLabel: '',
                         headerShown: false,
@@ -71,7 +71,7 @@ const TabsLayout = () => {
                     }}
                 />
                 <Tabs.Screen
-                    name="products"
+                    name="products/products"
                     options={{
                         tabBarLabel: 'Products',
                         headerShown: false,
@@ -85,7 +85,7 @@ const TabsLayout = () => {
                         ),
                     }} />
                 <Tabs.Screen
-                    name="profile"
+                    name="profile/profile"
                     options={{
                         tabBarLabel: 'Profile',
                         headerShown: false,

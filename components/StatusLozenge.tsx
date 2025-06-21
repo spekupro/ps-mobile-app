@@ -42,7 +42,7 @@ const StatusLozenge: React.FC<StatusLozengeProps> = ({ status, type }) => {
         <View className={``}>
             <Text
                 className={`text-xs px-2 py-2 rounded-xl ${colors}`}>
-                {status}
+                EXPIRED
             </Text>
         </View>
     );
