@@ -11,9 +11,9 @@ export const useOrders = () => {
         try {
             setLoading(true);
             setError(null);
-            
+
             const response = await apiClient.get<OrderInterface[]>(
-                'stargate/orders/?limit=10&offset=0&orderBy=createdAt&order=DESC'
+                '@api/stargate/orders/?limit=10&offset=0&orderBy=createdAt&order=DESC',
             );
             setOrders(response.data);
         } catch (err) {
@@ -35,6 +35,6 @@ export const useOrders = () => {
         orders,
         loading,
         error,
-        refetch
+        refetch,
     };
 };

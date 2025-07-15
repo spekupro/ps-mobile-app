@@ -4,7 +4,7 @@
     "slug": "ps-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/montonio-icon-blue.png",
+    "icon": "./assets/images/montonio-logo-primary.png",
     "scheme": "ps-mobile-app",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -19,17 +19,17 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/montonio-icon-blue.png"
+      "favicon": "./assets/images/montonio-logo-primary.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/montonio-logo-primary.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#260071"
         }
       ]
     ],

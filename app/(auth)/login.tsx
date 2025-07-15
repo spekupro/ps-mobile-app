@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
-    Alert,
     Image,
+    StyleSheet,
     Text,
     View,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as yup from 'yup';
 import images from '@/constants/images';
 import CustomButton from '@/components/CustomButton';
 import CustomTextInput from '@/components/CustomTextInput';
@@ -15,44 +16,93 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useRouter } from 'expo-router';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import apiClient from '@/services/api.client';
+import useDokobitAuth from '@/hooks/useDokobitAuth';
+
+interface FormData {
+    email: string;
+    password: string;
+}
+
+interface FormErrors {
+    email?: string;
+    password?: string;
+    general?: string;
+}
+
+const getErrorMessage = (error: unknown): string => {
+    if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { status?: number } };
+
+        if (axiosError.response?.status === 401) {
+            return 'Invalid email or password. Please try again.';
+        }
+    }
+
+    return 'Unable to connect. Please check your internet connection and try again.';
+};
+
+const validationSchema = yup.object().shape({
+    email: yup
+        .string()
+        .email('Please enter a valid email address')
+        .required('Email is required'),
+    password: yup
+        .string()
+        .min(1, 'Password is required')
+        .required('Password is required'),
+});
 
 const LoginScreen = () => {
     const { setIsLoggedIn } = useGlobalContext();
-    const [form, setForm] = useState({
-        email: '',
-        password: '',
-    });
+    const [form, setForm] = useState<FormData>({ email: '', password: '' });
+    const [errors, setErrors] = useState<FormErrors>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
+    const { startDokobitAuthentication, isLoading: isDokobitLoading } = useDokobitAuth();
 
-    const submit = async () => {
-        if (!form.email || !form.password) {
-            Alert.alert('Error', 'Please enter a valid email');
-            return;
+    const updateFormField = useCallback((field: keyof FormData, value: string) => {
+        setForm(prev => ({ ...prev, [field]: value }));
+    }, []);
+
+    const submit = useCallback(async () => {
+        setErrors({});
+
+        try {
+            await validationSchema.validate(form, { abortEarly: false });
+        } catch (validationError) {
+            if (validationError instanceof yup.ValidationError) {
+                const newErrors: FormErrors = {};
+                validationError.inner.forEach((error) => {
+                    if (error.path) {
+                        newErrors[error.path as keyof FormErrors] = error.message;
+                    }
+                });
+                setErrors(newErrors);
+                return;
+            }
         }
 
         setIsSubmitting(true);
 
         try {
-            console.log(form.email);
-            console.log(form.password);
-            await apiClient.post<any>('/auth/password-login', {
+            await apiClient.post('@api/auth/password-login', {
                 email: form.email,
                 password: form.password,
             });
             setIsLoggedIn(true);
             router.replace('/orders/orders');
-        } catch (e) {
-            //Alert.alert('Error', e.message);
-            console.log(e);
+        } catch (error) {
+            const errorMessage = getErrorMessage(error);
+            setErrors({ general: errorMessage });
+            console.log(error);
         } finally {
             setIsSubmitting(false);
         }
-    };
+    }, [form, setIsLoggedIn, router]);
 
     return (
         <KeyboardAwareScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
+            contentContainerStyle={styles.scrollContainer}
             keyboardShouldPersistTaps="handled"
             enableOnAndroid={true}
         >
@@ -60,27 +110,47 @@ const LoginScreen = () => {
                 <Image
                     source={images.MontonioLogo}
                     resizeMode="contain"
-                    tintColor="white"
                     className="w-60 m-10"
                 />
             </SafeAreaView>
-            <SafeAreaView className="w-full h-full bg-neutral px-10">
+            <SafeAreaView className="w-full h-full bg-white px-10">
                 <Text className="text-4xl font-bold color-neutral-60">Welcome back!</Text>
                 <View className="py-5">
-                    <CustomTextInput
-                        title="Email"
-                        value={form.email}
-                        handleChangeText={(email: string) => setForm({ ...form, email: email })}
-                        otherStyles="mt-7"
-                        image={icons.MailIcon}
-                        keyboardType="email-address"
-                    ></CustomTextInput>
-                    <CustomTextInput
-                        title="Password"
-                        value={form.password}
-                        handleChangeText={(password: string) => setForm({ ...form, password: password })}
-                        otherStyles="mt-7"
-                    ></CustomTextInput>
+                    <View>
+                        <CustomTextInput
+                            title="Email"
+                            value={form.email}
+                            handleChangeText={(email: string) => updateFormField('email', email)}
+                            otherStyles="mt-7"
+                            image={icons.MailIcon}
+                            keyboardType="email-address"
+                        />
+                        {errors.email && (
+                            <Text className="text-red-500 text-sm mt-1 ml-1">
+                                {errors.email}
+                            </Text>
+                        )}
+                    </View>
+                    <View>
+                        <CustomTextInput
+                            title="Password"
+                            value={form.password}
+                            handleChangeText={(password: string) => updateFormField('password', password)}
+                            otherStyles="mt-7"
+                        />
+                        {errors.password && (
+                            <Text className="text-red-500 text-sm mt-1 ml-1">
+                                {errors.password}
+                            </Text>
+                        )}
+                    </View>
+                    {errors.general && (
+                        <View style={styles.errorContainer}>
+                            <Text style={styles.errorText}>
+                                {errors.general}
+                            </Text>
+                        </View>
+                    )}
                 </View>
                 <View className="flex-row justify-between">
                     <CustomButton
@@ -94,8 +164,8 @@ const LoginScreen = () => {
                         title="Log in with e-ID"
                         containerStyles="border-2 border-neutral-30 w-[150px] mt-7"
                         textStyles="text-neutral-60"
-                        handlePress={submit}
-                        isLoading={isSubmitting}
+                        handlePress={startDokobitAuthentication}
+                        isLoading={isDokobitLoading}
                     />
                 </View>
             </SafeAreaView>
@@ -103,5 +173,24 @@ const LoginScreen = () => {
         </KeyboardAwareScrollView>
     );
 };
+
+const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow: 1,
+    },
+    errorContainer: {
+        marginTop: 16,
+        padding: 12,
+        backgroundColor: '#fef2f2',
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#fecaca',
+    },
+    errorText: {
+        color: '#dc2626',
+        fontSize: 14,
+        textAlign: 'center',
+    },
+});
 
 export default LoginScreen;

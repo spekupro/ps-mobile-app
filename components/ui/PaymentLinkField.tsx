@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, Linking, TouchableOpacity } from 'react-native';
 import { PaymentLinkFieldProps } from '@/types/payment-link.interface';
 
 const PaymentLinkField: React.FC<PaymentLinkFieldProps> = ({ label, value, isLink = false, href }) => {
@@ -11,9 +10,11 @@ const PaymentLinkField: React.FC<PaymentLinkFieldProps> = ({ label, value, isLin
             </View>
             <View className="w-1/2">
                 {isLink && href ? (
-                    <Link href={{ pathname: href }} className="text-primary">
-                        {value}
-                    </Link>
+                    <TouchableOpacity onPress={() => Linking.openURL(href)}>
+                        <Text className="text-primary">
+                            {value}
+                        </Text>
+                    </TouchableOpacity>
                 ) : (
                     <Text>{value}</Text>
                 )}

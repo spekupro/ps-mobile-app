@@ -9,7 +9,7 @@ const PaymentLinksScreen = () => {
 
     const handlePaymentLinkPress = (paymentLinkId: string) => {
         // Navigate to payment link details
-        router.push(`/(tabs)/payment-links/payment-link?id=${paymentLinkId}`);
+        router.push(`/payment-link-detail?uuid=${paymentLinkId}`);
     };
 
     if (loading) {
