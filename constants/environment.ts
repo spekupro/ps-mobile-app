@@ -8,8 +8,5 @@ export const environment = {
     name: EnvEnum.DEVELOPMENT,
     apiURL: 'http://api.partner.montonio:3031',
     dokobitIdGatewayURL: 'https://id-sandbox.dokobit.com',
-    oldPartnerSystemUrl: 'http://partner.montonio:4202',
-    intercomApiBase: 'https://api-iam.eu.intercom.io',
-    intercomAppId: 'zdcaipo4',
     salvBaseUrl: 'https://demo.salv.com',
 };

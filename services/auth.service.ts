@@ -23,7 +23,7 @@ export class AuthService {
      * Step 1: Start eID authentication session
      * Returns a Dokobit token that will be used in the authentication flow
      */
-    public static async startEIDAuthentication(locale: string = 'en'): Promise<DokobitSession> {
+    public static async startEIDAuthentication(locale: string = 'en_US'): Promise<DokobitSession> {
         const response = await apiClient.post<DokobitSession>('@api/auth/eid/create-session', { locale });
         return response.data;
     }
