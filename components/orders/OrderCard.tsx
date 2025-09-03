@@ -6,13 +6,13 @@ import { formatDate } from '@/utils/helpers/date.helper';
 
 interface OrderCardProps {
     order: OrderInterface;
-    onPress: (orderId: string) => void;
+    onPress: (orderUuid: string) => void;
 }
 
 const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
     return (
         <TouchableOpacity
-            className="border border-neutral-30 rounded-xl p-4 mb-3 flex-row justify-between items-center shadow-sm shadow-neutral-30"
+            className="border border-neutral-30 rounded-xl p-4 mb-3 flex-row justify-between items-center"
             onPress={() => onPress(order.uuid)}
         >
             <View className="flex-1">
@@ -22,9 +22,9 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
             </View>
 
             <View className="items-end">
-                <StatusLozenge 
-                    status={order.paymentStatus} 
-                    type={getOrderStatusColor(order.paymentStatus)} 
+                <StatusLozenge
+                    status={order.paymentStatus}
+                    type={getOrderStatusColor(order.paymentStatus)}
                 />
             </View>
         </TouchableOpacity>

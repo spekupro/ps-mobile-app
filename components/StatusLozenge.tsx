@@ -39,10 +39,10 @@ const StatusLozenge: React.FC<StatusLozengeProps> = ({ status, type }) => {
     const colors = statusColors[type];
 
     return (
-        <View className={``}>
+        <View className={`items-start`}>
             <Text
-                className={`text-xs px-2 py-2 rounded-xl ${colors}`}>
-                EXPIRED
+                className={`text-xs p-1.5 rounded-xl shadow-sm shadow-neutral-20 ${colors}`}>
+                {status}
             </Text>
         </View>
     );

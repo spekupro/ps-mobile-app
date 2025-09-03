@@ -24,11 +24,11 @@ export const useOrders = () => {
     };
 
     useEffect(() => {
-        fetchOrders();
+        fetchOrders().then();
     }, []);
 
     const refetch = () => {
-        fetchOrders();
+        fetchOrders().then();
     };
 
     return {

@@ -30,8 +30,8 @@ const OrdersScreen = () => {
         }
     }, [searchQuery, orders]);
 
-    const handleOrderPress = (orderId: string) => {
-        router.push(`/order-detail?uuid=${orderId}`);
+    const handleOrderPress = (orderUuid: string) => {
+        router.push(`/order-detail?uuid=${orderUuid}`);
     };
 
     if (error) {
