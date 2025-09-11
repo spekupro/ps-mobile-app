@@ -24,7 +24,16 @@ export class AuthService {
      * Returns a Dokobit token that will be used in the authentication flow
      */
     public static async startEIDAuthentication(locale: string = 'en_US'): Promise<DokobitSession> {
-        const response = await apiClient.post<DokobitSession>('@api/auth/eid/create-session', { locale });
+        console.log('startEIDAuthentication');
+        // https://id-sandbox.dokobit.com/js/dokobit-integration.min.js
+        const response = await apiClient.post<DokobitSession>('@api/auth/eid/create-session', {
+            locale,
+        }, {
+            headers: {
+                origin: 'http://partner.montonio:4201',
+            },
+        });
+        console.log('response', response.data);
         return response.data;
     }
 

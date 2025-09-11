@@ -20,7 +20,7 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ onAuthSuccess, onAuthError, o
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        initializeDokobitAuth();
+        initializeDokobitAuth().then();
     }, []);
 
     const initializeDokobitAuth = useCallback(async () => {
@@ -28,11 +28,11 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ onAuthSuccess, onAuthError, o
             setIsLoading(true);
             const session = await AuthService.startEIDAuthentication();
             setDokobitToken(session.dokobitToken);
-            
+
             // Create HTML that integrates with Dokobit SDK
             const html = createDokobitHtml(session.dokobitToken);
             setWebViewHtml(html);
-            
+
             setTimeout(() => {
                 setIsLoading(false);
             }, 300);
@@ -46,6 +46,7 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ onAuthSuccess, onAuthError, o
         return `
         <!DOCTYPE html>
         <html>
+        <script type="text/javascript" src="https://id-sandbox.dokobit.com/js/dokobit-integration.min.js" id="dokobitIDGateway"></script>
         <head>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -193,13 +194,13 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ onAuthSuccess, onAuthError, o
     const handleWebViewMessage = useCallback(async (event: any) => {
         try {
             const data = JSON.parse(event.nativeEvent.data);
-            
+
             if (data.type === 'AUTH_SUCCESS') {
                 setIsLoading(true);
-                
+
                 try {
                     const result: DokobitLogin = await AuthService.dokobitLogin(data.returnToken);
-                    
+
                     if (result.nextStep === AuthStep.LOGIN) {
                         onAuthSuccess();
                     } else if (result.nextStep === AuthStep.SELECT_USER) {
@@ -245,7 +246,7 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ onAuthSuccess, onAuthError, o
                     <Text style={styles.loadingText}>Loading authentication...</Text>
                 </View>
             )}
-            
+
             {webViewHtml && (
                 <WebView
                     source={{ html: webViewHtml }}
@@ -257,7 +258,7 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ onAuthSuccess, onAuthError, o
                     onLoadEnd={() => setIsLoading(false)}
                 />
             )}
-            
+
             <View style={styles.footer}>
                 <CustomButton
                     title="Cancel"

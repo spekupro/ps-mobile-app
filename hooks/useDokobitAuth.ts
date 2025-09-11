@@ -21,10 +21,10 @@ const completeAuthentication = async (setIsLoggedIn: (value: boolean) => void, r
     try {
         // Fetch user profile to ensure authentication is complete
         const profile = await AuthService.getProfile();
-        
+
         // Update global authentication state
         setIsLoggedIn(true);
-        
+
         // Navigate to main app screen
         router.replace('/orders/orders');
     } catch (err) {
@@ -43,7 +43,7 @@ export const useDokobitAuth = (): UseDokobitAuthReturn => {
     const startDokobitAuthentication = useCallback(async () => {
         setIsLoading(true);
         setError(null);
-        
+
         try {
             // Navigate to the Dokobit authentication screen
             router.push('/dokobit-auth');
@@ -58,10 +58,10 @@ export const useDokobitAuth = (): UseDokobitAuthReturn => {
     const handleDokobitReturn = useCallback(async (returnToken: string) => {
         setIsLoading(true);
         setError(null);
-        
+
         try {
             const result: DokobitLogin = await AuthService.dokobitLogin(returnToken);
-            
+
             if (result.nextStep === AuthStep.LOGIN) {
                 // Direct login successful - complete authentication
                 await completeAuthentication(setIsLoggedIn, router);
@@ -82,7 +82,7 @@ export const useDokobitAuth = (): UseDokobitAuthReturn => {
     const selectUser = useCallback(async (userUuid: string) => {
         setIsLoading(true);
         setError(null);
-        
+
         try {
             await AuthService.finishEIDAuthentication(userUuid);
             await completeAuthentication(setIsLoggedIn, router);
