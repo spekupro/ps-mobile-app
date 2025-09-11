@@ -38,7 +38,7 @@ const OrderDetailScreen = () => {
                 </View>
             ) : (
                 <ScrollView className="flex-1">
-                    <View className="p-6 border-b border-neutral-20">
+                    <View className="mb-6 p-6 border-b border-neutral-20">
                         <Text
                             className="text-2xl font-bold text-neutral-80 mb-1">{order.merchantReference}</Text>
                         <Text className="text-neutral-40 text-sm mb-2">UUID: {order.uuid}</Text>
@@ -49,79 +49,63 @@ const OrderDetailScreen = () => {
                     </View>
 
                     {/* Order Details Card */}
-                    <Card className="my-0 mx-0 border-0 rounded-none border-b border-neutral-20">
-                        <Text className="text-xl font-bold mb-4">Order details</Text>
+                    <Card header="Details" className={`p-4`}>
+                        <View className="flex-row flex-start h-6">
+                            <Text className="w-1/2">Order ID</Text>
+                            <Text className="font-medium w-1/2">{order.merchantReference}</Text>
+                        </View>
 
-                        <View className="space-y-3">
-                            <View className="flex-row justify-between">
-                                <Text className="text-neutral-60">Order ID</Text>
-                                <Text className="font-medium">{order.merchantReference}</Text>
-                            </View>
+                        <View className="flex-row justify-between h-6">
+                            <Text className="w-1/2">Business legal name</Text>
+                            <Text className="font-medium w-1/2">{order.businessName}</Text>
+                        </View>
 
-                            <View className="flex-row justify-between">
-                                <Text className="text-neutral-60">Business legal name</Text>
-                                <Text className="font-medium">{order.businessName}</Text>
-                            </View>
-
-                            <View className="flex-row justify-between">
-                                <Text className="text-neutral-60">Store name</Text>
-                                <Text className="font-medium text-blue-600">{order.storeName}</Text>
-                            </View>
+                        <View className="flex-row justify-between h-6">
+                            <Text className="w-1/2">Store name</Text>
+                            <Text className="font-medium w-1/2">{order.storeName}</Text>
                         </View>
                     </Card>
 
                     {/* Customer Card */}
-                    <Card className="my-0 mx-0 border-0 rounded-none border-b border-neutral-20">
-                        <Text className="text-xl font-bold mb-4">Customer</Text>
+                    <Card header="Customer" className={`p-4`}>
+                        <View className="flex-row flex-start h-6">
+                            <Text className="w-1/2">Name</Text>
+                            <Text
+                                className="font-medium w-1/2">{order.billingAddress?.firstName} {order.billingAddress?.lastName}</Text>
+                        </View>
 
-                        <View className="space-y-3">
-                            <View className="flex-row justify-between">
-                                <Text className="text-neutral-60">Name</Text>
-                                <Text
-                                    className="font-medium">{order.billingAddress?.firstName} {order.billingAddress?.lastName}</Text>
-                            </View>
+                        <View className="flex-row flex-start h-6">
+                            <Text className="w-1/2">Phone</Text>
+                            <Text className="font-medium w-1/2">{order.billingAddress?.phoneNumber || '-'}</Text>
+                        </View>
 
-                            <View className="flex-row justify-between">
-                                <Text className="text-neutral-60">Phone</Text>
-                                <Text className="font-medium">{order.billingAddress?.phoneNumber || '-'}</Text>
-                            </View>
-
-                            <View className="flex-row justify-between">
-                                <Text className="text-neutral-60">Email</Text>
-                                <Text className="font-medium">{order.billingAddress?.email || '-'}</Text>
-                            </View>
+                        <View className="flex-row flex-start h-6">
+                            <Text className="w-1/2">Email</Text>
+                            <Text className="font-medium w-1/2">{order.billingAddress?.email || '-'}</Text>
                         </View>
                     </Card>
 
                     {/* Items Card */}
-                    <Card className="my-0 mx-0 border-0 rounded-none border-b border-neutral-20">
-                        <Text className="text-xl font-bold mb-4">Items</Text>
-
+                    <Card header="Items">
                         {/* Table Header */}
-                        <View className="bg-neutral-10 p-3 rounded-md mb-3">
+                        <View className="bg-neutral-10 mb-3 p-4">
                             <View className="flex-row justify-between">
-                                <Text className="font-medium text-neutral-60 flex-1">Name</Text>
-                                <Text className="font-medium text-neutral-60 w-20 text-center">Quantity</Text>
-                                <Text className="font-medium text-neutral-60 w-20 text-right">Price</Text>
+                                <Text className="font-medium flex-1">Name</Text>
+                                <Text className="font-medium w-20 text-center">Quantity</Text>
+                                <Text className="font-medium w-20 text-right">Price</Text>
                             </View>
                         </View>
 
-                        {/* TODO: Add API request to fetch line items */}
-                        {order.lineItems ? (
-                            order.lineItems.map((item: any, index: number) => (
-                                <View key={index} className="flex-row justify-between py-2">
-                                    <Text className="flex-1">{item.name}</Text>
-                                    <Text className="w-20 text-center">{item.quantity}</Text>
-                                    <Text className="w-20 text-right">€{item.price}</Text>
-                                </View>
-                            ))
-                        ) : (
-                            <Text className="text-neutral-50 py-4">Line items not available - need additional API
-                                call</Text>
-                        )}
+                        {order.lineItems.map((item: any, index: number) => (
+                            <View key={index} className="flex-row justify-between px-4 py-2">
+                                <Text className="flex-1">{item.name}</Text>
+                                <Text className="w-20 text-center">{item.quantity}</Text>
+                                <Text className="w-20 text-right">€{item.finalPrice}</Text>
+                            </View>
+                        ))}
 
                         {/* Total */}
-                        <View className="border-t border-neutral-20 pt-3 mt-3">
+                        <View className="border-t border-neutral-20 p-4 mt-3">
                             <View className="flex-row justify-between">
                                 <Text className="font-bold text-lg">Total</Text>
                                 <Text className="font-bold text-lg">€{order.grandTotal}</Text>
@@ -130,21 +114,19 @@ const OrderDetailScreen = () => {
                     </Card>
 
                     {/* Payments Card */}
-                    <Card className="my-0 mx-0 border-0 rounded-none border-b border-neutral-20">
-                        <Text className="text-xl font-bold mb-4">Payments</Text>
-
+                    <Card header="Payments">
                         {/* Table Header */}
-                        <View className="bg-neutral-10 p-3 rounded-md mb-3">
+                        <View className="bg-neutral-10 p-4">
                             <View className="flex-row justify-between">
-                                <Text className="font-medium text-neutral-60 flex-1">Date</Text>
-                                <Text className="font-medium text-neutral-60 flex-1">Payment method</Text>
-                                <Text className="font-medium text-neutral-60 w-20 text-center">Amount</Text>
-                                <Text className="font-medium text-neutral-60 w-20 text-center">Status</Text>
+                                <Text className="font-medium flex-1">Date</Text>
+                                <Text className="font-medium flex-1">Payment method</Text>
+                                <Text className="font-medium w-20">Amount</Text>
+                                <Text className="font-medium w-20">Status</Text>
                             </View>
                         </View>
 
                         {order.paymentIntents?.map((intent: any, index: number) => (
-                            <View key={index} className="flex-row justify-between items-center py-3">
+                            <View key={index} className="flex-row justify-between items-center p-4">
                                 <View className="flex-1">
                                     <Text className="font-medium">{formatDate(intent.createdAt)}</Text>
                                 </View>
@@ -152,37 +134,33 @@ const OrderDetailScreen = () => {
                                     <Text>Payment Initiation</Text>
                                 </View>
                                 <View className="w-20">
-                                    <Text className="text-center">€{intent.amount}</Text>
+                                    <Text>€{intent.amount}</Text>
                                 </View>
                                 <View className="w-20">
-                                    <View className="items-center">
-                                        <StatusLozenge
-                                            status={intent.status}
-                                            type={getOrderStatusColor(intent.status)}
-                                        />
-                                    </View>
+                                    <StatusLozenge
+                                        status={intent.status}
+                                        type={getOrderStatusColor(intent.status)}
+                                    />
                                 </View>
                             </View>
                         ))}
                     </Card>
 
                     {/* Refunds Card */}
-                    <Card className="my-0 mx-0 border-0 rounded-none">
-                        <Text className="text-xl font-bold mb-4">Refunds</Text>
-
+                    <Card header="Refunds">
                         {/* Table Header */}
-                        <View className="bg-neutral-10 p-3 rounded-md mb-3">
+                        <View className="bg-neutral-10 p-4">
                             <View className="flex-row justify-between">
-                                <Text className="font-medium text-neutral-60 flex-1">Date</Text>
-                                <Text className="font-medium text-neutral-60 flex-1">Refund type</Text>
-                                <Text className="font-medium text-neutral-60 w-20 text-center">Amount</Text>
-                                <Text className="font-medium text-neutral-60 w-20 text-center">Status</Text>
+                                <Text className="font-medium flex-1">Date</Text>
+                                <Text className="font-medium flex-1">Refund type</Text>
+                                <Text className="font-medium w-20">Amount</Text>
+                                <Text className="font-medium w-20">Status</Text>
                             </View>
                         </View>
 
                         {order.refunds?.length > 0 ? (
                             order.refunds.map((refund: any, index: number) => (
-                                <View key={index} className="flex-row justify-between items-center py-3">
+                                <View key={index} className="flex-row justify-between items-center p-4">
                                     <View className="flex-1">
                                         <Text className="font-medium">{formatDate(refund.createdAt)}</Text>
                                     </View>
@@ -190,20 +168,18 @@ const OrderDetailScreen = () => {
                                         <Text>{refund.type}</Text>
                                     </View>
                                     <View className="w-20">
-                                        <Text className="text-center">€{refund.amount}</Text>
+                                        <Text>€{refund.amount}</Text>
                                     </View>
                                     <View className="w-20">
-                                        <View className="items-center">
-                                            <StatusLozenge
-                                                status={refund.status}
-                                                type={getOrderStatusColor(refund.status)}
-                                            />
-                                        </View>
+                                        <StatusLozenge
+                                            status={refund.status}
+                                            type={getOrderStatusColor(refund.status)}
+                                        />
                                     </View>
                                 </View>
                             ))
                         ) : (
-                            <Text className="text-neutral-50 py-4">No refunds yet</Text>
+                            <Text className="text-neutral-40 px-4 py-6">No refunds yet</Text>
                         )}
                     </Card>
                 </ScrollView>

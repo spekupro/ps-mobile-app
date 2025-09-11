@@ -94,7 +94,6 @@ const LoginScreen = () => {
         } catch (error) {
             const errorMessage = getErrorMessage(error);
             setErrors({ general: errorMessage });
-            console.log(error);
         } finally {
             setIsSubmitting(false);
         }
