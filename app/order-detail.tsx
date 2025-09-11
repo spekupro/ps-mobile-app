@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SafeAreaView, Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useOrderDetail } from '@/hooks/useOrderDetail';
 import { useGlobalContext } from '@/context/GlobalProvider';
@@ -8,6 +8,7 @@ import Card from '@/components/ui/Card';
 import { formatDate } from '@/utils/helpers/date.helper';
 import icons from '@/constants/icons';
 import { Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const OrderDetailScreen = () => {
     const { uuid } = useLocalSearchParams<{ uuid: string }>();
@@ -88,7 +89,7 @@ const OrderDetailScreen = () => {
                     {/* Items Card */}
                     <Card header="Items">
                         {/* Table Header */}
-                        <View className="bg-neutral-10 mb-3 p-4">
+                        <View className="bg-neutral-10 p-4">
                             <View className="flex-row justify-between">
                                 <Text className="font-medium flex-1">Name</Text>
                                 <Text className="font-medium w-20 text-center">Quantity</Text>
@@ -96,16 +97,19 @@ const OrderDetailScreen = () => {
                             </View>
                         </View>
 
-                        {order.lineItems.map((item: any, index: number) => (
-                            <View key={index} className="flex-row justify-between px-4 py-2">
-                                <Text className="flex-1">{item.name}</Text>
-                                <Text className="w-20 text-center">{item.quantity}</Text>
-                                <Text className="w-20 text-right">€{item.finalPrice}</Text>
-                            </View>
-                        ))}
+                        {order.lineItems ?
+                            order.lineItems.map((item: any, index: number) => (
+                                <View key={index}
+                                      className="flex-row justify-between px-4 py-6 border-b border-neutral-20 ">
+                                    <Text className="flex-1">{item.name}</Text>
+                                    <Text className="w-20 text-center">{item.quantity}</Text>
+                                    <Text className="w-20 text-right">€{item.finalPrice}</Text>
+                                </View>
+                            ))
+                            : ''}
 
                         {/* Total */}
-                        <View className="border-t border-neutral-20 p-4 mt-3">
+                        <View className="p-4">
                             <View className="flex-row justify-between">
                                 <Text className="font-bold text-lg">Total</Text>
                                 <Text className="font-bold text-lg">€{order.grandTotal}</Text>

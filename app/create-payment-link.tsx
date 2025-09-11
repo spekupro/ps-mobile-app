@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Link } from 'expo-router';
 import CustomTextInput from '@/components/CustomTextInput';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import CustomCheckBox from '@/components/CustomCheckBox';
 import CustomButton from '@/components/CustomButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CreatePaymentLinkScreen = () => {
     const [form, setForm] = useState({

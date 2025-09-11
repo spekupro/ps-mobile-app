@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { useOrders } from '@/hooks/useOrders';
 import { OrderInterface } from '@/types/order.interface';
 import OrdersHeader from '@/components/orders/OrdersHeader';
 import OrdersList from '@/components/orders/OrdersList';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const OrdersScreen = () => {
     const router = useRouter();

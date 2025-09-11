@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SafeAreaView, Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { usePaymentLink } from '@/hooks/usePaymentLink';
 import { useGlobalContext } from '@/context/GlobalProvider';
@@ -7,6 +7,7 @@ import PaymentLinkHeader from '@/components/payment-links/PaymentLinkHeader';
 import PaymentLinkDetails from '@/components/payment-links/PaymentLinkDetails';
 import icons from '@/constants/icons';
 import { Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PaymentLinkDetailScreen = () => {
     const { uuid } = useLocalSearchParams<{ uuid: string }>();

@@ -92,6 +92,7 @@ const LoginScreen = () => {
             setIsLoggedIn(true);
             router.replace('/orders/orders');
         } catch (error) {
+            console.log(error);
             const errorMessage = getErrorMessage(error);
             setErrors({ general: errorMessage });
         } finally {

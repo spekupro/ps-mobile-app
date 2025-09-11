@@ -1,8 +1,9 @@
 import React from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { usePaymentLinks } from '@/hooks/usePaymentLinks';
 import PaymentLinksList from '@/components/payment-links/PaymentLinksList';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PaymentLinksScreen = () => {
     const { paymentLinks, loading, error } = usePaymentLinks();
