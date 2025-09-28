@@ -4,29 +4,33 @@
     "slug": "ps-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/montonio-logo-primary.png",
+    "icon": "./src/assets/images/montonio-logo-primary.png",
     "scheme": "ps-mobile-app",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.spegents.psmobileapp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#fff"
+        "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/montonio-logo-primary.png"
+      "favicon": "./src/assets/images/montonio-logo-primary.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/montonio-logo-primary.png",
+          "image": "./src/assets/images/montonio-logo-primary.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#260071"
@@ -35,6 +39,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ed19eef9-7d2c-4616-bc25-1a27764320a0"
+      }
     }
   }
 }
