@@ -8,9 +8,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const PaymentLinksScreen = () => {
     const { paymentLinks, loading, error } = usePaymentLinks();
 
-    const handlePaymentLinkPress = (paymentLinkId: string) => {
+    const handlePaymentLinkPress = (paymentLinkUuid: string) => {
         // Navigate to payment link details
-        router.push(`/payment-link-detail?uuid=${paymentLinkId}`);
+        router.push(`/payment-links/${paymentLinkUuid}/details`);
     };
 
     if (loading) {

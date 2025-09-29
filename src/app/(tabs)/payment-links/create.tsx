@@ -40,7 +40,7 @@ const CreatePaymentLinkScreen = () => {
             });
 
             // Navigate to payment link detail view
-            router.push(`/payment-link-detail?uuid=${response.data.uuid}`);
+            router.push(`/payment-links/${response.data.uuid}/details`);
         } catch (error) {
             Alert.alert('Error', 'Failed to create payment link');
             console.error(error);

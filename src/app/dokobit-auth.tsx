@@ -18,7 +18,7 @@ const DokobitAuthScreen = () => {
             // Fetch user profile to complete authentication
             await AuthService.getProfile();
             setIsLoggedIn(true);
-            router.replace('/orders/orders');
+            router.replace('/orders');
         } catch (err) {
             console.error('Failed to fetch profile:', err);
             handleAuthError('Failed to complete authentication');

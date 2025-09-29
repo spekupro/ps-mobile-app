@@ -67,30 +67,31 @@ const LoginScreen = () => {
     const submit = useCallback(async () => {
         setErrors({});
 
-        try {
-            await validationSchema.validate(form, { abortEarly: false });
-        } catch (validationError) {
-            if (validationError instanceof yup.ValidationError) {
-                const newErrors: FormErrors = {};
-                validationError.inner.forEach((error) => {
-                    if (error.path) {
-                        newErrors[error.path as keyof FormErrors] = error.message;
-                    }
-                });
-                setErrors(newErrors);
-                return;
-            }
-        }
+        // TODO Uncomment validation
+        // try {
+        //     await validationSchema.validate(form, { abortEarly: false });
+        // } catch (validationError) {
+        //     if (validationError instanceof yup.ValidationError) {
+        //         const newErrors: FormErrors = {};
+        //         validationError.inner.forEach((error) => {
+        //             if (error.path) {
+        //                 newErrors[error.path as keyof FormErrors] = error.message;
+        //             }
+        //         });
+        //         setErrors(newErrors);
+        //         return;
+        //     }
+        // }
 
         setIsSubmitting(true);
 
         try {
-            await apiClient.post('@api/auth/password-login', {
-                email: form.email,
-                password: form.password,
-            });
+            // await apiClient.post('@api/auth/password-login', {
+            //     email: form.email,
+            //     password: form.password,
+            // });
             setIsLoggedIn(true);
-            router.replace('/orders/orders');
+            router.replace('/orders');
         } catch (error) {
             console.log(error);
             const errorMessage = getErrorMessage(error);

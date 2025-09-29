@@ -4,7 +4,7 @@
     "slug": "ps-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/images/montonio-logo-primary.png",
+    "icon": "./src/assets/images/montonio-logo-small-primary.png",
     "scheme": "ps-mobile-app",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,

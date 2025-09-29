@@ -6,7 +6,7 @@ const App = () => {
     const { isLoggedIn } = useGlobalContext();
 
     if (isLoggedIn) {
-        return <Redirect href={'/orders/orders'} />;
+        return <Redirect href={'/orders'} />;
     }
 
     return <Redirect href={'/(auth)/login'} />;

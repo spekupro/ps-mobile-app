@@ -32,7 +32,7 @@ const OrdersScreen = () => {
     }, [searchQuery, orders]);
 
     const handleOrderPress = (orderUuid: string) => {
-        router.push(`/order-detail?uuid=${orderUuid}`);
+        router.push(`/orders/${orderUuid}/details`);
     };
 
     if (error) {
