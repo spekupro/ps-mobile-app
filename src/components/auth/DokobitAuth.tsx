@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, Alert, ActivityIndicator, Modal, TouchableOpacity } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { StatusBar } from 'expo-status-bar';
 import CustomButton from '@/src/components/CustomButton';
 import AuthService from '@/src/services/auth.service';
-import { DokobitLogin, AuthStep } from '@/src/components/auth/interfaces/eid.interface';
-import apiClient from '@/src/services/api.client';
+import { AuthStep, DokobitLogin, EidUser } from '@/src/components/auth/interfaces/eid.interface';
+import { getDokobitHtml } from '@/src/components/auth/dokobitTemplate';
 
 interface DokobitAuthProps {
     visible: boolean;
@@ -19,6 +18,9 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ visible, onAuthSuccess, onAut
     const [dokobitToken, setDokobitToken] = useState<string | null>(null);
     const [webViewHtml, setWebViewHtml] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [choosingUser, setChoosingUser] = useState(false);
+    const [users, setUsers] = useState<EidUser[]>([]);
+    const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
     useEffect(() => {
         if (visible) {
@@ -32,8 +34,7 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ visible, onAuthSuccess, onAut
             const session = await AuthService.startEIDAuthentication();
             setDokobitToken(session.dokobitToken);
 
-            // Fetch the actual HTML from Dokobit
-            const html = await fetchDokobitHtml(session.dokobitToken);
+            const html = await getDokobitHtml(session.dokobitToken, 'en');
             setWebViewHtml(html);
 
             setTimeout(() => {
@@ -45,54 +46,6 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ visible, onAuthSuccess, onAut
             onAuthError('Failed to initialize authentication');
         }
     }, [onAuthError]);
-
-    const fetchDokobitHtml = async (token: string): Promise<string> => {
-        const response = await apiClient.get(`https://id-sandbox.dokobit.com/auth/${token}?_locale=en&version=2`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'text/html',
-                'origin': 'http://partner.montonio:4201',
-            },
-        });
-        console.log('html', response);
-
-        if (!response) {
-            throw new Error('Failed to fetch Dokobit HTML');
-        }
-
-        const html = await response.data;
-
-        // Inject JavaScript to communicate with React Native
-        return injectReactNativeBridge(html);
-    };
-
-    const injectReactNativeBridge = (html: string): string => {
-        const injectedScript = `
-            <script>
-                // Monitor for the callback URL that Dokobit redirects to
-                (function() {
-                    const checkForCallback = setInterval(() => {
-                        const url = window.location.href;
-                        if (url.includes('/complete/')) {
-                            clearInterval(checkForCallback);
-                            // Extract return token from URL path
-                            const returnToken = window.location.pathname.split('/complete/')[1]?.split('?')[0];
-
-                            if (returnToken && window.ReactNativeWebView) {
-                                window.ReactNativeWebView.postMessage(JSON.stringify({
-                                    type: 'AUTH_SUCCESS',
-                                    returnToken: returnToken
-                                }));
-                            }
-                        }
-                    }, 100);
-                })();
-            </script>
-        `;
-
-        // Inject before closing </body> tag
-        return html.replace('</body>', `${injectedScript}</body>`);
-    };
 
     const handleWebViewMessage = useCallback(async (event: any) => {
         try {
@@ -107,17 +60,37 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ visible, onAuthSuccess, onAut
                     if (result.nextStep === AuthStep.LOGIN) {
                         onAuthSuccess();
                     } else if (result.nextStep === AuthStep.SELECT_USER) {
-                        // Handle user selection (to be implemented)
-                        Alert.alert('Multiple Users', 'User selection not yet implemented');
+                        setUsers(result.users);
+                        setSelectedUser(result.users[0]?.uuid || null);
+                        setChoosingUser(true);
+                        setIsLoading(false);
                     }
                 } catch (err) {
+                    setIsLoading(false);
                     onAuthError('Authentication failed');
                 }
+            } else if (data.type === 'AUTH_ERROR') {
+                setIsLoading(false);
+                onAuthError(data.error || 'Authentication error');
             }
         } catch (err) {
+            setIsLoading(false);
             onAuthError('Invalid response from authentication service');
         }
     }, [onAuthSuccess, onAuthError]);
+
+    const handleFinishLogin = useCallback(async () => {
+        if (!selectedUser) return;
+
+        setIsLoading(true);
+        try {
+            await AuthService.finishEIDAuthentication(selectedUser);
+            onAuthSuccess();
+        } catch (err) {
+            setIsLoading(false);
+            onAuthError('Failed to complete authentication');
+        }
+    }, [selectedUser, onAuthSuccess, onAuthError]);
 
     return (
         <Modal
@@ -128,13 +101,14 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ visible, onAuthSuccess, onAut
         >
             <View style={styles.modalContainer}>
                 <View style={styles.header}>
-                    <Text style={styles.headerTitle}>Authenticate to continue</Text>
+                    <Text style={styles.headerTitle}>Log in with e-ID</Text>
                     <TouchableOpacity onPress={onCancel} style={styles.closeButton}>
                         <Text style={styles.closeButtonText}>✕</Text>
                     </TouchableOpacity>
                 </View>
 
-                {!error && <Text style={styles.subtext}>Choose your eID provider</Text>}
+                {!error && !choosingUser && <Text style={styles.subtext}>Choose your eID provider</Text>}
+                {!error && choosingUser && <Text style={styles.subtext}>Please choose an email to log in with</Text>}
 
                 {error ? (
                     <View style={styles.errorContainer}>
@@ -151,43 +125,69 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ visible, onAuthSuccess, onAut
                             textStyles="text-gray-600"
                         />
                     </View>
-                ) : (
+                ) : choosingUser ? (
                     <>
-                        <View style={styles.webviewContainer}>
-                            {isLoading && (
-                                <View style={styles.loadingOverlay}>
-                                    <ActivityIndicator size="large" color="#5C14EB" />
-                                    <Text style={styles.loadingText}>Loading authentication...</Text>
-                                </View>
-                            )}
-
-                            {webViewHtml && (
-                                <WebView
-                                    source={{ html: webViewHtml }}
-                                    style={styles.webview}
-                                    onMessage={handleWebViewMessage}
-                                    javaScriptEnabled
-                                    domStorageEnabled
-                                    startInLoadingState={false}
-                                    onLoadEnd={() => setIsLoading(false)}
-                                    originWhitelist={['*']}
-                                    mixedContentMode="always"
-                                />
-                            )}
+                        <View style={styles.userSelectionContainer}>
+                            <Text style={styles.label}>Email</Text>
+                            {users.map((user) => (
+                                <TouchableOpacity
+                                    key={user.uuid}
+                                    style={[
+                                        styles.userOption,
+                                        selectedUser === user.uuid && styles.userOptionSelected,
+                                    ]}
+                                    onPress={() => setSelectedUser(user.uuid)}
+                                >
+                                    <Text style={styles.userEmail}>{user.email}</Text>
+                                </TouchableOpacity>
+                            ))}
                         </View>
 
                         <View style={styles.footer}>
                             <CustomButton
-                                title="Cancel"
-                                handlePress={onCancel}
-                                containerStyles="border-2 border-gray-300"
-                                textStyles="text-gray-600"
+                                title="Login"
+                                handlePress={handleFinishLogin}
+                                containerStyles="bg-primary-50"
+                                textStyles="text-white"
+                                isLoading={isLoading}
                             />
+                        </View>
+                    </>
+                ) : (
+                    <>
+                        <View style={styles.webviewContainer}>
+                            {webViewHtml && !choosingUser && (
+                                <WebView
+                                    source={{ html: webViewHtml, baseUrl: 'https://id-sandbox.dokobit.com' }}
+                                    style={styles.webview}
+                                    onMessage={handleWebViewMessage}
+                                    javaScriptEnabled={true}
+                                    domStorageEnabled={true}
+                                    startInLoadingState={false}
+                                    onLoadEnd={() => {
+                                        console.log('WebView loaded');
+                                        setIsLoading(false);
+                                    }}
+                                    onError={(syntheticEvent) => {
+                                        const { nativeEvent } = syntheticEvent;
+                                        console.error('WebView error:', nativeEvent);
+                                    }}
+                                    onHttpError={(syntheticEvent) => {
+                                        const { nativeEvent } = syntheticEvent;
+                                        console.error('WebView HTTP error:', nativeEvent);
+                                    }}
+                                    originWhitelist={['*']}
+                                    mixedContentMode="always"
+                                    allowsInlineMediaPlayback={true}
+                                    mediaPlaybackRequiresUserAction={false}
+                                    thirdPartyCookiesEnabled={true}
+                                    sharedCookiesEnabled={true}
+                                />
+                            )}
                         </View>
                     </>
                 )}
             </View>
-            <StatusBar style="dark" />
         </Modal>
     );
 };
@@ -269,6 +269,32 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderTopWidth: 1,
         borderTopColor: '#e5e7eb',
+    },
+    userSelectionContainer: {
+        flex: 1,
+        padding: 20,
+    },
+    label: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#374151',
+        marginBottom: 12,
+    },
+    userOption: {
+        padding: 16,
+        backgroundColor: '#f9fafb',
+        borderRadius: 8,
+        borderWidth: 2,
+        borderColor: '#e5e7eb',
+        marginBottom: 12,
+    },
+    userOptionSelected: {
+        backgroundColor: '#ede9fe',
+        borderColor: '#5C14EB',
+    },
+    userEmail: {
+        fontSize: 16,
+        color: '#1f2937',
     },
 });
 

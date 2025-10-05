@@ -1,10 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import {
-    Image,
-    StyleSheet,
-    Text,
-    View,
-} from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as yup from 'yup';
@@ -15,7 +10,6 @@ import icons from '@/src/common/constants/icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useRouter } from 'expo-router';
 import { useGlobalContext } from '@/src/context/GlobalProvider';
-import apiClient from '@/src/services/api.client';
 import useDokobitAuth from '@/src/hooks/useDokobitAuth';
 import DokobitAuth from '@/src/components/auth/DokobitAuth';
 
@@ -30,7 +24,7 @@ interface FormErrors {
     general?: string;
 }
 
-const getErrorMessage = (error: unknown): string => {
+function getErrorMessage(error: unknown): string {
     if (error && typeof error === 'object' && 'response' in error) {
         const axiosError = error as { response?: { status?: number } };
 
@@ -40,7 +34,7 @@ const getErrorMessage = (error: unknown): string => {
     }
 
     return 'Unable to connect. Please check your internet connection and try again.';
-};
+}
 
 const validationSchema = yup.object().shape({
     email: yup
@@ -53,7 +47,7 @@ const validationSchema = yup.object().shape({
         .required('Password is required'),
 });
 
-const LoginScreen = () => {
+function LoginScreen() {
     const { setIsLoggedIn } = useGlobalContext();
     const [form, setForm] = useState<FormData>({ email: '', password: '' });
     const [errors, setErrors] = useState<FormErrors>({});
@@ -68,6 +62,8 @@ const LoginScreen = () => {
     } = useDokobitAuth();
 
     const handleAuthSuccess = () => {
+        setIsLoggedIn(true);
+        router.replace('/orders');
         closeModal();
     };
 
@@ -196,7 +192,7 @@ const LoginScreen = () => {
             <StatusBar style="light" backgroundColor="#301BB5" />
         </KeyboardAwareScrollView>
     );
-};
+}
 
 const styles = StyleSheet.create({
     scrollContainer: {
