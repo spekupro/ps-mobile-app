@@ -3,7 +3,7 @@ import { Asset } from 'expo-asset';
 export const getDokobitHtml = async (sessionToken: string, locale: string = 'en'): Promise<string> => {
     try {
         // Load the HTML template file
-        const asset = Asset.fromModule(require('./html/dokobit-template.html'));
+        const asset = Asset.fromModule(require('../html/dokobit-template.html'));
         await asset.downloadAsync();
 
         // Fetch the HTML content
