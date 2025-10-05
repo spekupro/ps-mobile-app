@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useGlobalContext } from '@/src/context/GlobalProvider';
-import { useOrders } from '@/src/hooks/useOrders';
+import { useOrders } from '@/src/components/orders/hooks/useOrders';
 import { OrderInterface } from '@/src/components/orders/interfaces/order.interface';
 import OrdersHeader from '@/src/components/orders/OrdersHeader';
 import OrdersList from '@/src/components/orders/OrdersList';
@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const OrdersScreen = () => {
     const router = useRouter();
     const { setIsLoading } = useGlobalContext();
-    const { orders, loading, error } = useOrders();
+    const { orders, loading, error, refetch } = useOrders();
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredOrders, setFilteredOrders] = useState<OrderInterface[]>([]);
 
@@ -35,27 +35,24 @@ const OrdersScreen = () => {
         router.push(`/orders/${orderUuid}/details`);
     };
 
-    if (error) {
-        return (
-            <SafeAreaView className="bg-white flex-1">
-                <View className="flex-1 justify-center items-center">
-                    <Text className="text-red-500">Error: {error}</Text>
-                </View>
-            </SafeAreaView>
-        );
-    }
-
     return (
-        <SafeAreaView className="bg-white flex-1">
+        <SafeAreaView className="bg-white flex-1" edges={['top']}>
             <OrdersHeader
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
+                onRefresh={refetch}
             />
 
-            <OrdersList
-                orders={filteredOrders}
-                onOrderPress={handleOrderPress}
-            />
+            {error ? (
+                    <View className="flex-1 justify-center items-center">
+                        <Text className="text-red-500">Error: {error}</Text>
+                    </View>
+                ) :
+                <OrdersList
+                    orders={filteredOrders}
+                    onOrderPress={handleOrderPress}
+                />
+            }
         </SafeAreaView>
     );
 };

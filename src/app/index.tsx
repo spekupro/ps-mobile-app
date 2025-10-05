@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect } from 'expo-router';
 import { useGlobalContext } from '@/src/context/GlobalProvider';
 
-const App = () => {
+function App() {
     const { isLoggedIn } = useGlobalContext();
 
     if (isLoggedIn) {
@@ -10,6 +10,6 @@ const App = () => {
     }
 
     return <Redirect href={'/(auth)/login'} />;
-};
+}
 
 export default App;

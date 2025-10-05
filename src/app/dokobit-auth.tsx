@@ -70,6 +70,7 @@ const DokobitAuthScreen = () => {
             onAuthSuccess={handleAuthSuccess}
             onAuthError={handleAuthError}
             onCancel={handleCancel}
+            visible={false}
         />
     );
 };

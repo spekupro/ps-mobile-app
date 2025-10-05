@@ -8,6 +8,7 @@ import SearchIcon from '@/src/assets/icons/search.png';
 import PlusIcon from '@/src/assets/icons/plus.png';
 import PaymentIcon from '@/src/assets/icons/payment.png';
 import ChevronLeftIcon from '@/src/assets/icons/chevron-left.png';
+import RefreshIcon from '@/src/assets/icons/refresh.png';
 
 export default {
     StoreIcon,
@@ -20,4 +21,5 @@ export default {
     PlusIcon,
     PaymentIcon,
     ChevronLeftIcon,
+    RefreshIcon,
 };

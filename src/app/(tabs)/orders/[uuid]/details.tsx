@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useOrderDetail } from '@/src/hooks/useOrderDetail';
+import { useOrderDetail } from '@/src/components/orders/hooks/useOrderDetail';
 import { useGlobalContext } from '@/src/context/GlobalProvider';
 import StatusLozenge, { getOrderStatusColor } from '@/src/components/StatusLozenge';
 import Card from '@/src/components/ui/Card';

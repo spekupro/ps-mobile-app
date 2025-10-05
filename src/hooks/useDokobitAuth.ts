@@ -9,7 +9,9 @@ interface UseDokobitAuthReturn {
     isLoading: boolean;
     error: string | null;
     pendingUsers: EidUser[] | null;
-    startDokobitAuthentication: () => Promise<void>;
+    showModal: boolean;
+    startDokobitAuthentication: () => void;
+    closeModal: () => void;
     selectUser: (userUuid: string) => Promise<void>;
     handleDokobitReturn: (returnToken: string) => Promise<void>;
 }
@@ -26,7 +28,7 @@ const completeAuthentication = async (setIsLoggedIn: (value: boolean) => void, r
         setIsLoggedIn(true);
 
         // Navigate to main app screen
-        router.replace('/orders/orders');
+        router.replace('/orders');
     } catch (err) {
         // If profile fetch fails, authentication isn't complete
         throw new Error('Failed to complete authentication');
@@ -37,23 +39,20 @@ export const useDokobitAuth = (): UseDokobitAuthReturn => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [pendingUsers, setPendingUsers] = useState<EidUser[] | null>(null);
+    const [showModal, setShowModal] = useState(false);
     const { setIsLoggedIn } = useGlobalContext();
     const router = useRouter();
 
-    const startDokobitAuthentication = useCallback(async () => {
-        setIsLoading(true);
+    const startDokobitAuthentication = useCallback(() => {
+        setShowModal(true);
         setError(null);
+    }, []);
 
-        try {
-            // Navigate to the Dokobit authentication screen
-            router.push('/dokobit-auth');
-        } catch (err) {
-            setError('Failed to start Dokobit authentication');
-            Alert.alert('Error', 'Failed to start Dokobit authentication. Please try again.');
-        } finally {
-            setIsLoading(false);
-        }
-    }, [router]);
+    const closeModal = useCallback(() => {
+        setShowModal(false);
+        setIsLoading(false);
+        setError(null);
+    }, []);
 
     const handleDokobitReturn = useCallback(async (returnToken: string) => {
         setIsLoading(true);
@@ -65,9 +64,11 @@ export const useDokobitAuth = (): UseDokobitAuthReturn => {
             if (result.nextStep === AuthStep.LOGIN) {
                 // Direct login successful - complete authentication
                 await completeAuthentication(setIsLoggedIn, router);
+                closeModal();
             } else if (result.nextStep === AuthStep.SELECT_USER) {
                 // User selection required
                 setPendingUsers(result.users);
+                closeModal();
                 // For now, just show alert - we'll implement user selection screen later
                 Alert.alert('Multiple Users', 'Multiple users found. User selection not yet implemented.');
             }
@@ -77,7 +78,7 @@ export const useDokobitAuth = (): UseDokobitAuthReturn => {
         } finally {
             setIsLoading(false);
         }
-    }, [setIsLoggedIn, router]);
+    }, [setIsLoggedIn, router, closeModal]);
 
     const selectUser = useCallback(async (userUuid: string) => {
         setIsLoading(true);
@@ -99,7 +100,9 @@ export const useDokobitAuth = (): UseDokobitAuthReturn => {
         isLoading,
         error,
         pendingUsers,
+        showModal,
         startDokobitAuthentication,
+        closeModal,
         selectUser,
         handleDokobitReturn,
     };

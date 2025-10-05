@@ -1,18 +1,18 @@
 import React from 'react';
-import { FlatList, Text } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import { OrderInterface } from '@/src/components/orders/interfaces/order.interface';
 import OrderCard from './OrderCard';
-import ScreenContainer from '@/src/components/ui/ScreenContainer';
 
 interface OrdersListProps {
     orders: OrderInterface[];
     onOrderPress: (orderUuid: string) => void;
 }
 
-const OrdersList: React.FC<OrdersListProps> = ({ orders, onOrderPress }) => {
+function OrdersList({ orders, onOrderPress }: OrdersListProps): React.JSX.Element {
     return (
-        <ScreenContainer>
+        <View className="flex-1">
             <FlatList
+                className="px-6"
                 data={orders}
                 keyExtractor={(item) => item.uuid.toString()}
                 ListEmptyComponent={<Text className="text-center text-gray-500">No orders found</Text>}
@@ -20,8 +20,8 @@ const OrdersList: React.FC<OrdersListProps> = ({ orders, onOrderPress }) => {
                     <OrderCard order={item} onPress={onOrderPress} />
                 )}
             />
-        </ScreenContainer>
+        </View>
     );
-};
+}
 
 export default OrdersList;

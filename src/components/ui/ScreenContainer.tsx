@@ -1,26 +1,22 @@
 import React from 'react';
-import { View, ViewStyle } from 'react-native';
+import { ViewStyle } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface ScreenContainerProps {
     children: React.ReactNode;
     className?: string;
     style?: ViewStyle;
-    noPadding?: boolean;
+    noPadding?: false;
 }
 
-const ScreenContainer: React.FC<ScreenContainerProps> = ({
-                                                             children,
-                                                             className = '',
-                                                             style = {},
-                                                             noPadding = false,
-                                                         }) => {
+function ScreenContainer({ children, className, style, noPadding }: ScreenContainerProps) {
     const paddingClass = noPadding ? '' : 'px-6';
 
     return (
-        <View className={`${paddingClass} ${className}`} style={style}>
+        <SafeAreaView className={`${paddingClass} ${className}`} style={style}>
             {children}
-        </View>
+        </SafeAreaView>
     );
-};
+}
 
 export default ScreenContainer;

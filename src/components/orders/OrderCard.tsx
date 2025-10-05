@@ -9,7 +9,7 @@ interface OrderCardProps {
     onPress: (orderUuid: string) => void;
 }
 
-const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
+function OrderCard({ order, onPress }: OrderCardProps): React.JSX.Element {
     return (
         <TouchableOpacity
             className="border border-neutral-30 rounded-xl p-4 mb-3 flex-row justify-between items-center"
@@ -29,6 +29,6 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
             </View>
         </TouchableOpacity>
     );
-};
+}
 
 export default OrderCard;

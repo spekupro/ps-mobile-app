@@ -17,6 +17,7 @@ import { useRouter } from 'expo-router';
 import { useGlobalContext } from '@/src/context/GlobalProvider';
 import apiClient from '@/src/services/api.client';
 import useDokobitAuth from '@/src/hooks/useDokobitAuth';
+import DokobitAuth from '@/src/components/auth/DokobitAuth';
 
 interface FormData {
     email: string;
@@ -58,7 +59,21 @@ const LoginScreen = () => {
     const [errors, setErrors] = useState<FormErrors>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
-    const { startDokobitAuthentication, isLoading: isDokobitLoading } = useDokobitAuth();
+    const {
+        startDokobitAuthentication,
+        isLoading: isDokobitLoading,
+        showModal,
+        closeModal,
+        handleDokobitReturn,
+    } = useDokobitAuth();
+
+    const handleAuthSuccess = () => {
+        closeModal();
+    };
+
+    const handleAuthError = (error: string) => {
+        console.error('Auth error:', error);
+    };
 
     const updateFormField = useCallback((field: keyof FormData, value: string) => {
         setForm(prev => ({ ...prev, [field]: value }));
@@ -170,6 +185,14 @@ const LoginScreen = () => {
                     />
                 </View>
             </SafeAreaView>
+
+            <DokobitAuth
+                visible={showModal}
+                onAuthSuccess={handleAuthSuccess}
+                onAuthError={handleAuthError}
+                onCancel={closeModal}
+            />
+
             <StatusBar style="light" backgroundColor="#301BB5" />
         </KeyboardAwareScrollView>
     );
