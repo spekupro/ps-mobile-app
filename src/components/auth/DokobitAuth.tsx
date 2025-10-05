@@ -119,12 +119,6 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ visible, onAuthSuccess, onAut
                             handlePress={initializeDokobitAuth}
                             containerStyles="mt-4"
                         />
-                        <CustomButton
-                            title="Cancel"
-                            handlePress={onCancel}
-                            containerStyles="mt-2 border-2 border-gray-300"
-                            textStyles="text-gray-600"
-                        />
                     </View>
                 ) : choosingUser ? (
                     <>

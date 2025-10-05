@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface GlobalContextType {
     isLoggedIn: boolean;
@@ -27,7 +27,6 @@ const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // TODO getCurrentUser / getCurrentSession
         setIsLoading(false);
         setIsLoggedIn(false);
     }, []);
