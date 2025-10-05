@@ -12,6 +12,7 @@ import { useRouter } from 'expo-router';
 import { useGlobalContext } from '@/src/context/GlobalProvider';
 import useDokobitAuth from '@/src/hooks/useDokobitAuth';
 import DokobitAuth from '@/src/components/auth/DokobitAuth';
+import apiClient from '@/src/services/api.client';
 
 interface FormData {
     email: string;
@@ -78,29 +79,28 @@ function LoginScreen() {
     const submit = useCallback(async () => {
         setErrors({});
 
-        // TODO Uncomment validation
-        // try {
-        //     await validationSchema.validate(form, { abortEarly: false });
-        // } catch (validationError) {
-        //     if (validationError instanceof yup.ValidationError) {
-        //         const newErrors: FormErrors = {};
-        //         validationError.inner.forEach((error) => {
-        //             if (error.path) {
-        //                 newErrors[error.path as keyof FormErrors] = error.message;
-        //             }
-        //         });
-        //         setErrors(newErrors);
-        //         return;
-        //     }
-        // }
+        try {
+            await validationSchema.validate(form, { abortEarly: false });
+        } catch (validationError) {
+            if (validationError instanceof yup.ValidationError) {
+                const newErrors: FormErrors = {};
+                validationError.inner.forEach((error) => {
+                    if (error.path) {
+                        newErrors[error.path as keyof FormErrors] = error.message;
+                    }
+                });
+                setErrors(newErrors);
+                return;
+            }
+        }
 
         setIsSubmitting(true);
 
         try {
-            // await apiClient.post('@api/auth/password-login', {
-            //     email: form.email,
-            //     password: form.password,
-            // });
+            await apiClient.post('@api/auth/password-login', {
+                email: form.email,
+                password: form.password,
+            });
             setIsLoggedIn(true);
             router.replace('/orders');
         } catch (error) {

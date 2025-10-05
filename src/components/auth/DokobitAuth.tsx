@@ -166,7 +166,6 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ visible, onAuthSuccess, onAut
                                     domStorageEnabled={true}
                                     startInLoadingState={false}
                                     onLoadEnd={() => {
-                                        console.log('WebView loaded');
                                         setIsLoading(false);
                                     }}
                                     onError={(syntheticEvent) => {
