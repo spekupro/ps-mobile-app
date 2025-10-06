@@ -32,12 +32,12 @@ function OrderCard({ order, onPress }: OrderCardProps): React.JSX.Element {
             className="border border-neutral-30 rounded-xl p-4 mb-3 flex-row justify-between items-center"
             onPress={() => onPress(order.uuid)}
         >
-            <View className="flex-1 pr-6">
+            <View className="flex-1">
                 <Text className="text-neutral-40">{formatDate(order.createdAt)}</Text>
                 <Text className="font-medium">{order.merchantReference}</Text>
             </View>
 
-            <View className="flex-col items-end">
+            <View className="flex-col items-end pl-6">
                 <Text className="font-medium">{order.currency + ' ' + order.grandTotal}</Text>
                 <StatusLozenge
                     status={order.paymentStatus}

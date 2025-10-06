@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from '@/src/components/CustomButton';
+import icons from '@/src/common/constants/icons';
 
 interface FilterOption {
     name: string;
@@ -97,6 +98,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, filters, onClose, 
     };
 
     const handleClear = () => {
+        closeDatePickers();
         setSelectedFilters({});
     };
 
@@ -115,8 +117,8 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, filters, onClose, 
                 <View className="p-6 border-b border-neutral-20">
                     <View className="flex-row justify-between items-center">
                         <Text className="text-2xl font-bold color-neutral-60">Filters</Text>
-                        <TouchableOpacity onPress={onClose}>
-                            <Text className="text-lg color-neutral-60">✕</Text>
+                        <TouchableOpacity onPress={onClose} className="py-2 px-5">
+                            <Image source={icons.CloseIcon} className="w-6 h-6" />
                         </TouchableOpacity>
                     </View>
                 </View>
