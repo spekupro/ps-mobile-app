@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
 import CustomButton from '@/src/components/CustomButton';
 import { EidUser } from '@/src/components/auth/interfaces/eid.interface';
 
@@ -76,7 +75,6 @@ const DokobitUserSelection: React.FC<DokobitUserSelectionProps> = ({
                     />
                 </View>
             </View>
-            <StatusBar style="dark" />
         </SafeAreaView>
     );
 };

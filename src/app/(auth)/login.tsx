@@ -189,7 +189,7 @@ function LoginScreen() {
                 onCancel={closeModal}
             />
 
-            <StatusBar style="light" backgroundColor="#301BB5" />
+            <StatusBar style="light" />
         </KeyboardAwareScrollView>
     );
 }

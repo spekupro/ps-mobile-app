@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, TextInput, TouchableOpacity, Image, ImageSourcePropType, KeyboardTypeOptions } from 'react-native';
-
+import { Image, ImageSourcePropType, KeyboardTypeOptions, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import icons from '@/src/common/constants/icons';
 
 interface TextInputProps {

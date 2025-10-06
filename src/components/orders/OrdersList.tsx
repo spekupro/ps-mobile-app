@@ -12,7 +12,7 @@ function OrdersList({ orders, onOrderPress }: OrdersListProps): React.JSX.Elemen
     return (
         <View className="flex-1">
             <FlatList
-                className="px-6"
+                className="px-6 pt-6"
                 data={orders}
                 keyExtractor={(item) => item.uuid.toString()}
                 ListEmptyComponent={<Text className="text-center text-gray-500">No orders found</Text>}

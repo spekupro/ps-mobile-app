@@ -9,6 +9,7 @@ import PlusIcon from '@/src/assets/icons/plus.png';
 import PaymentIcon from '@/src/assets/icons/payment.png';
 import ChevronLeftIcon from '@/src/assets/icons/chevron-left.png';
 import RefreshIcon from '@/src/assets/icons/refresh.png';
+import FilterIcon from '@/src/assets/icons/filter.png';
 
 export default {
     StoreIcon,
@@ -22,4 +23,5 @@ export default {
     PaymentIcon,
     ChevronLeftIcon,
     RefreshIcon,
+    FilterIcon,
 };

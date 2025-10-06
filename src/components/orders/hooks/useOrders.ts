@@ -1,11 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { OrderInterface } from '@/src/components/orders/interfaces/order.interface';
 import apiClient from '@/src/services/api.client';
 
+interface OrderFilterDateRange {
+    name: string;
+    type: 'dateRange';
+}
+
+interface OrderFilterList {
+    name: string;
+    type: 'list';
+    options: string[];
+}
+
+type OrderFilter = OrderFilterDateRange | OrderFilterList;
+
 export const useOrders = () => {
     const [orders, setOrders] = useState<OrderInterface[]>([]);
+    const [filters, setFilters] = useState<OrderFilter[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    const fetchFilters = async () => {
+        try {
+            const response = await apiClient.get<OrderFilter[]>(
+                '@api/stargate/orders/filters',
+            );
+            setFilters(response.data);
+            return response.data;
+        } catch (err) {
+            console.error('Failed to fetch filters:', err);
+            return [];
+        }
+    };
 
     const fetchOrders = async () => {
         try {
@@ -25,6 +52,7 @@ export const useOrders = () => {
     };
 
     useEffect(() => {
+        fetchFilters().then();
         fetchOrders().then();
     }, []);
 
@@ -35,6 +63,7 @@ export const useOrders = () => {
 
     return {
         orders,
+        filters,
         loading,
         error,
         refetch,
