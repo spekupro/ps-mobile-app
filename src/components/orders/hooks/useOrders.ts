@@ -69,11 +69,15 @@ export function useOrders() {
                 if (Array.isArray(value) && value.length > 0) {
                     value.forEach(item => params.append(key, item));
                 } else if (value && typeof value === 'object' && 'startDate' in value) {
+                    const dates: string[] = [];
                     if (value.startDate) {
-                        params.append(`${key}From`, value.startDate.toISOString());
+                        dates.push(value.startDate.toISOString());
                     }
                     if (value.endDate) {
-                        params.append(`${key}To`, value.endDate.toISOString());
+                        dates.push(value.endDate.toISOString());
+                    }
+                    if (dates.length > 0) {
+                        dates.forEach(date => params.append(key, date));
                     }
                 }
             });

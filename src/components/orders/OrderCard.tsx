@@ -29,15 +29,15 @@ function OrderCard({ order, onPress }: OrderCardProps): React.JSX.Element {
         //     </View>
         // </TouchableOpacity>
         <TouchableOpacity
-            className="border border-neutral-30 rounded-xl p-4 mb-3 flex-row justify-between items-center"
+            className="border border-neutral-30 rounded-xl p-4 mb-3 flex-row justify-between"
             onPress={() => onPress(order.uuid)}
         >
-            <View className="flex-1">
+            <View className="flex-1 justify-between">
                 <Text className="text-neutral-40">{formatDate(order.createdAt)}</Text>
                 <Text className="font-medium">{order.merchantReference}</Text>
             </View>
 
-            <View className="flex-col items-end pl-6">
+            <View className="flex-col items-end pl-6 justify-between">
                 <Text className="font-medium">{order.currency + ' ' + order.grandTotal}</Text>
                 <StatusLozenge
                     status={order.paymentStatus}

@@ -22,11 +22,15 @@ interface FiltersModalProps {
     onApply: (selectedFilters: SelectedFilters) => void;
 }
 
+// TODO Date filters have timezone issue, if you send 10.10.2025 at 00:05 EET, it will convert it to 09.10.2025 21:05 UTC
+//  and and correct orders are not found
+
 const FiltersModal: React.FC<FiltersModalProps> = ({ visible, filters, onClose, onApply }) => {
     const insets = useSafeAreaInsets();
     const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({});
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+    const [expandedFilters, setExpandedFilters] = useState<Set<string>>(new Set());
 
     const toggleFilterOption = (filterName: string, option: string) => {
         setSelectedFilters(prev => {
@@ -67,14 +71,34 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, filters, onClose, 
         }
     };
 
-    const openStartDatePicker = () => {
-        setShowEndDatePicker(false);
-        setShowStartDatePicker(true);
+    const clearDate = (filterName: string, type: 'startDate' | 'endDate') => {
+        setSelectedFilters(prev => {
+            const currentDateRange = (prev[filterName] as { startDate?: Date; endDate?: Date }) || {};
+            const newDateRange = { ...currentDateRange };
+            delete newDateRange[type];
+
+            // If both dates are now empty, remove the filter entirely
+            if (!newDateRange.startDate && !newDateRange.endDate) {
+                const { [filterName]: _, ...rest } = prev;
+                return rest;
+            }
+
+            return {
+                ...prev,
+                [filterName]: newDateRange,
+            };
+        });
+        closeDatePickers();
     };
 
-    const openEndDatePicker = () => {
+    const toggleStartDatePicker = () => {
+        setShowEndDatePicker(false);
+        setShowStartDatePicker(prev => !prev);
+    };
+
+    const toggleEndDatePicker = () => {
         setShowStartDatePicker(false);
-        setShowEndDatePicker(true);
+        setShowEndDatePicker(prev => !prev);
     };
 
     const closeDatePickers = () => {
@@ -95,6 +119,18 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, filters, onClose, 
     const handleApply = () => {
         onApply(selectedFilters);
         onClose();
+    };
+
+    const toggleFilterExpanded = (filterName: string) => {
+        setExpandedFilters(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(filterName)) {
+                newSet.delete(filterName);
+            } else {
+                newSet.add(filterName);
+            }
+            return newSet;
+        });
     };
 
     const handleClear = () => {
@@ -135,26 +171,44 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, filters, onClose, 
                                 <View className="flex-row gap-3 mb-4">
                                     <View className="flex-1">
                                         <Text className="text-sm color-neutral-60 mb-2">Start Date</Text>
-                                        <TouchableOpacity
-                                            onPress={openStartDatePicker}
-                                            className="py-3 px-4 border-2 border-neutral-30 rounded-lg"
-                                        >
-                                            <Text className="text-base color-neutral-60">
-                                                {formatDate(dateRange.startDate)}
-                                            </Text>
-                                        </TouchableOpacity>
+                                        <View className="flex-row items-center gap-2">
+                                            <TouchableOpacity
+                                                onPress={toggleStartDatePicker}
+                                                className="flex-1 py-3 px-4 border-2 border-neutral-30 rounded-lg"
+                                            >
+                                                <Text className="text-base color-neutral-60">
+                                                    {formatDate(dateRange.startDate)}
+                                                </Text>
+                                            </TouchableOpacity>
+                                            {dateRange.startDate && (
+                                                <TouchableOpacity
+                                                    onPress={() => clearDate(filter.name, 'startDate')}
+                                                >
+                                                    <Image source={icons.CloseIcon} className="w-5 h-5" />
+                                                </TouchableOpacity>
+                                            )}
+                                        </View>
                                     </View>
 
                                     <View className="flex-1">
                                         <Text className="text-sm color-neutral-60 mb-2">End Date</Text>
-                                        <TouchableOpacity
-                                            onPress={openEndDatePicker}
-                                            className="py-3 px-4 border-2 border-neutral-30 rounded-lg"
-                                        >
-                                            <Text className="text-base color-neutral-60">
-                                                {formatDate(dateRange.endDate)}
-                                            </Text>
-                                        </TouchableOpacity>
+                                        <View className="flex-row items-center gap-2">
+                                            <TouchableOpacity
+                                                onPress={toggleEndDatePicker}
+                                                className="flex-1 py-3 px-4 border-2 border-neutral-30 rounded-lg"
+                                            >
+                                                <Text className="text-base color-neutral-60">
+                                                    {formatDate(dateRange.endDate)}
+                                                </Text>
+                                            </TouchableOpacity>
+                                            {dateRange.endDate && (
+                                                <TouchableOpacity
+                                                    onPress={() => clearDate(filter.name, 'endDate')}
+                                                >
+                                                    <Image source={icons.CloseIcon} className="w-5 h-5" />
+                                                </TouchableOpacity>
+                                            )}
+                                        </View>
                                     </View>
                                 </View>
 
@@ -177,38 +231,56 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, filters, onClose, 
                         );
                     })}
 
-                    {listFilters.map(filter => (
-                        <View key={filter.name} className="mb-6">
-                            <Text className="text-lg font-semibold color-neutral-60 mb-3 capitalize">
-                                {filter.name.replace(/([A-Z])/g, ' $1').trim()}
-                            </Text>
+                    {listFilters.map(filter => {
+                        const isExpanded = expandedFilters.has(filter.name);
+                        const selectedCount = Array.isArray(selectedFilters[filter.name])
+                            ? (selectedFilters[filter.name] as string[]).length
+                            : 0;
 
-                            <View className="space-y-2">
-                                {filter.options?.map(option => (
-                                    <TouchableOpacity
-                                        key={option}
-                                        onPress={() => toggleFilterOption(filter.name, option)}
-                                        className="flex-row items-center py-3 px-4 border border-neutral-20 rounded-lg"
-                                    >
-                                        <View
-                                            className={`w-5 h-5 border-2 rounded mr-3 items-center justify-center ${
-                                                isOptionSelected(filter.name, option)
-                                                    ? 'bg-primary-50 border-primary-50'
-                                                    : 'border-neutral-30'
-                                            }`}
-                                        >
-                                            {isOptionSelected(filter.name, option) && (
-                                                <Text className="text-white text-xs">✓</Text>
-                                            )}
-                                        </View>
-                                        <Text className="text-base color-neutral-60 capitalize">
-                                            {option.replace(/_/g, ' ').toLowerCase()}
-                                        </Text>
-                                    </TouchableOpacity>
-                                ))}
+                        return (
+                            <View key={filter.name} className="mb-4">
+                                <TouchableOpacity
+                                    onPress={() => toggleFilterExpanded(filter.name)}
+                                    className="flex-row items-center justify-between py-3 px-4 border-2 border-neutral-30 rounded-lg"
+                                >
+                                    <Text className="text-lg font-semibold color-neutral-60 capitalize">
+                                        {filter.name.replace(/([A-Z])/g, ' $1').trim()}
+                                        {selectedCount > 0 && (
+                                            <Text className="text-sm color-primary-50"> ({selectedCount})</Text>
+                                        )}
+                                    </Text>
+                                    <Text className="text-xl color-neutral-60">{isExpanded ? '−' : '+'}</Text>
+                                </TouchableOpacity>
+
+                                {isExpanded && (
+                                    <View className="mt-2 space-y-2">
+                                        {filter.options?.map(option => (
+                                            <TouchableOpacity
+                                                key={option}
+                                                onPress={() => toggleFilterOption(filter.name, option)}
+                                                className="flex-row items-center py-3 px-4 border border-neutral-20 rounded-lg"
+                                            >
+                                                <View
+                                                    className={`w-5 h-5 border-2 rounded mr-3 items-center justify-center ${
+                                                        isOptionSelected(filter.name, option)
+                                                            ? 'bg-primary-50 border-primary-50'
+                                                            : 'border-neutral-30'
+                                                    }`}
+                                                >
+                                                    {isOptionSelected(filter.name, option) && (
+                                                        <Text className="text-white text-xs">✓</Text>
+                                                    )}
+                                                </View>
+                                                <Text className="text-base color-neutral-60 capitalize">
+                                                    {option.replace(/_/g, ' ').toLowerCase()}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </View>
+                                )}
                             </View>
-                        </View>
-                    ))}
+                        );
+                    })}
                 </ScrollView>
 
                 <View className="p-6 border-t border-neutral-20">
