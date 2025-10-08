@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as yup from 'yup';
 import images from '@/src/common/constants/images';
@@ -77,6 +76,8 @@ function LoginScreen() {
     }, []);
 
     const submit = useCallback(async () => {
+        // setIsLoggedIn(true);
+        // router.replace('/orders');
         setErrors({});
 
         try {
@@ -189,7 +190,6 @@ function LoginScreen() {
                 onCancel={closeModal}
             />
 
-            <StatusBar style="light" />
         </KeyboardAwareScrollView>
     );
 }

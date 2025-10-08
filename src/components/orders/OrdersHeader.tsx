@@ -27,6 +27,7 @@ function OrdersHeader({ searchQuery, onSearchChange, onRefresh, onFilterPress }:
                         value={searchQuery}
                         image={icons.SearchIcon}
                         handleChangeText={onSearchChange}
+                        showClearButton={true}
                     />
                 </View>
                 <TouchableOpacity

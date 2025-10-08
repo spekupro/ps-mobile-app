@@ -1,5 +1,4 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import { generateJWT } from '@/src/services/jwt.service';
 import { environment } from '@/src/common/constants/environment';
 
 const apiClient = axios.create({
@@ -13,10 +12,6 @@ apiClient.interceptors.request.use(async (config: InternalAxiosRequestConfig) =>
     if (config.url && config.url.includes('@api')) {
         config.url = config.url.replace('@api', environment.apiURL);
     }
-
-    const tokenData = { aud: 'mainframe' };
-    const jwtToken = generateJWT(tokenData);
-    config.headers.Authorization = `Bearer ${jwtToken}`;
 
     return config;
 }, error => Promise.reject(error));

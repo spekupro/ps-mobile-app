@@ -3,7 +3,6 @@ import { Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useGlobalContext } from '@/src/context/GlobalProvider';
 import { useOrders } from '@/src/components/orders/hooks/useOrders';
-import { OrderInterface } from '@/src/components/orders/interfaces/order.interface';
 import OrdersHeader from '@/src/components/orders/OrdersHeader';
 import OrdersList from '@/src/components/orders/OrdersList';
 import FiltersModal from '@/src/components/filters/FiltersModal';
@@ -12,9 +11,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const OrdersScreen = () => {
     const router = useRouter();
     const { setIsLoading } = useGlobalContext();
-    const { orders, filters, loading, error, refetch } = useOrders();
+    const { orders, filters, loading, loadingMore, error, refetch, applyFilters, applySearch, loadMore } = useOrders();
     const [searchQuery, setSearchQuery] = useState('');
-    const [filteredOrders, setFilteredOrders] = useState<OrderInterface[]>([]);
     const [showFiltersModal, setShowFiltersModal] = useState(false);
 
     useEffect(() => {
@@ -22,24 +20,33 @@ const OrdersScreen = () => {
     }, [loading, setIsLoading]);
 
     useEffect(() => {
-        if (searchQuery.trim() === '') {
-            setFilteredOrders(orders);
-        } else {
-            const filtered = orders.filter(order =>
-                order.merchantReference.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                order.uuid.toLowerCase().includes(searchQuery.toLowerCase()),
-            );
-            setFilteredOrders(filtered);
+        if (searchQuery.length === 0) {
+            // Clear search immediately
+            applySearch(searchQuery);
+            return;
         }
-    }, [searchQuery, orders]);
+
+        // Debounce for search queries >= 3 characters
+        const timer = setTimeout(() => {
+            if (searchQuery.length >= 3) {
+                applySearch(searchQuery);
+            }
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
+    const handleSearchChange = (query: string) => {
+        setSearchQuery(query);
+    };
 
     const handleOrderPress = (orderUuid: string) => {
         router.push(`/orders/${orderUuid}/details`);
     };
 
     const handleApplyFilters = (selectedFilters: any) => {
-        console.log('Applied filters:', selectedFilters);
-        // TODO: Apply filters to orders
+        applyFilters(selectedFilters);
+        setShowFiltersModal(false);
     };
 
     return (
@@ -47,7 +54,7 @@ const OrdersScreen = () => {
             <View className="flex-1">
                 <OrdersHeader
                     searchQuery={searchQuery}
-                    onSearchChange={setSearchQuery}
+                    onSearchChange={handleSearchChange}
                     onRefresh={refetch}
                     onFilterPress={() => setShowFiltersModal(true)}
                 />
@@ -58,8 +65,10 @@ const OrdersScreen = () => {
                         </View>
                     ) :
                     <OrdersList
-                        orders={filteredOrders}
+                        orders={orders}
                         onOrderPress={handleOrderPress}
+                        onEndReached={loadMore}
+                        isLoadingMore={loadingMore}
                     />
                 }
 

@@ -20,7 +20,7 @@ export default {
     EyeOffIcon,
     MailIcon,
     SearchIcon,
-    PlusIcon,
+    PlusIcon, // TODO Maybe delete
     PaymentIcon,
     ChevronLeftIcon,
     RefreshIcon,

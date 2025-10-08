@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useOrderDetail } from '@/src/components/orders/hooks/useOrderDetail';
 import { useGlobalContext } from '@/src/context/GlobalProvider';
@@ -7,7 +7,6 @@ import StatusLozenge, { getOrderStatusColor } from '@/src/components/StatusLozen
 import Card from '@/src/components/ui/Card';
 import { formatDate } from '@/src/common/helpers/date.helper';
 import icons from '@/src/common/constants/icons';
-import { Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const OrderDetailScreen = () => {
@@ -135,7 +134,7 @@ const OrderDetailScreen = () => {
                                     <Text className="font-medium">{formatDate(intent.createdAt)}</Text>
                                 </View>
                                 <View className="flex-1">
-                                    <Text>Payment Initiation</Text>
+                                    <Text>{intent.paymentMethodType}</Text>
                                 </View>
                                 <View className="w-20">
                                     <Text>€{intent.amount}</Text>

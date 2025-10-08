@@ -10,6 +10,7 @@ interface TextInputProps {
     otherStyles?: string,
     keyboardType?: KeyboardTypeOptions,
     image?: ImageSourcePropType,
+    showClearButton?: boolean,
 }
 
 const CustomTextInput: React.FC<TextInputProps> = (
@@ -21,6 +22,7 @@ const CustomTextInput: React.FC<TextInputProps> = (
         placeholder,
         keyboardType,
         image,
+        showClearButton = false,
     }: TextInputProps) => {
     const [showPassword, setShowPassword] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -45,6 +47,16 @@ const CustomTextInput: React.FC<TextInputProps> = (
                     onBlur={() => setIsFocused(false)}
                     keyboardType={keyboardType}
                 />
+
+                {showClearButton && value && value.length > 0 && (
+                    <TouchableOpacity onPress={() => handleChangeText?.('')} className="mr-2">
+                        <Image
+                            source={icons.CloseIcon}
+                            className="w-5 h-5"
+                            resizeMode="contain"
+                        />
+                    </TouchableOpacity>
+                )}
 
                 {image && (
                     <Image
