@@ -28,7 +28,8 @@ export class AuthService {
             locale,
         }, {
             headers: {
-                origin: 'http://partner.montonio:4201',
+                origin: environment.appOrigin,
+                // origin: 'http://partner.montonio:4201',
             },
         });
         return response.data;

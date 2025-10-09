@@ -32,6 +32,7 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ visible, onAuthSuccess, onAut
     const initializeDokobitAuth = useCallback(async () => {
         try {
             setIsLoading(true);
+            setError(null);
             const session = await AuthService.startEIDAuthentication();
             setDokobitToken(session.dokobitToken);
 
@@ -42,9 +43,10 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ visible, onAuthSuccess, onAut
                 setIsLoading(false);
             }, 300);
         } catch (err) {
-            console.log(err);
-            setError('Failed to initialize authentication');
-            onAuthError('Failed to initialize authentication');
+            setIsLoading(false);
+            const errorMessage = err instanceof Error ? err.message : 'Failed to initialize authentication';
+            setError(errorMessage);
+            onAuthError(errorMessage);
         }
     }, [onAuthError]);
 
