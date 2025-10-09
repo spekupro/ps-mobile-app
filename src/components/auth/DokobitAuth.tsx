@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Modal, Text, TouchableOpacity, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import CustomButton from '@/src/components/CustomButton';
-import AuthService from '@/src/services/auth.service';
+import AuthService from '@/src/components/auth/services/auth.service';
 import { AuthStep, DokobitLogin, EidUser } from '@/src/components/auth/interfaces/eid.interface';
 import { getDokobitHtml } from '@/src/components/auth/helpers/dokobitTemplate';
 import { styles } from '@/src/components/auth/styles/DokobitAuth.styles';
@@ -119,7 +119,7 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ visible, onAuthSuccess, onAut
                         <CustomButton
                             title="Retry"
                             handlePress={initializeDokobitAuth}
-                            containerStyles="mt-4"
+                            containerStyles="mt-4 min-h-[62px]"
                         />
                     </View>
                 ) : choosingUser ? (
@@ -144,7 +144,7 @@ const DokobitAuth: React.FC<DokobitAuthProps> = ({ visible, onAuthSuccess, onAut
                             <CustomButton
                                 title="Login"
                                 handlePress={handleFinishLogin}
-                                containerStyles="bg-primary-50"
+                                containerStyles="bg-primary-50 min-h-[62px]"
                                 textStyles="text-white"
                                 isLoading={isLoading}
                             />

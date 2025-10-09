@@ -289,7 +289,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, filters, onClose, 
                             <CustomButton
                                 title="Clear"
                                 handlePress={handleClear}
-                                containerStyles="border-2 border-neutral-30"
+                                containerStyles="border-2 border-neutral-30 min-h-[62px]"
                                 textStyles="color-neutral-60"
                             />
                         </View>
@@ -297,7 +297,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, filters, onClose, 
                             <CustomButton
                                 title="Apply"
                                 handlePress={handleApply}
-                                containerStyles="bg-primary-50"
+                                containerStyles="bg-primary-50 min-h-[62px]"
                                 textStyles="text-white"
                             />
                         </View>

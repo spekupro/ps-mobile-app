@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { useGlobalContext } from '@/src/context/GlobalProvider';
 import DokobitAuth from '@/src/components/auth/DokobitAuth';
 import DokobitUserSelection from '@/src/components/auth/DokobitUserSelection';
-import AuthService from '@/src/services/auth.service';
+import AuthService from '@/src/components/auth/services/auth.service';
 import { EidUser } from '@/src/components/auth/interfaces/eid.interface';
 
 const DokobitAuthScreen = () => {

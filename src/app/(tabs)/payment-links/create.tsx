@@ -120,7 +120,7 @@ const CreatePaymentLinkScreen = () => {
                     <View className="items-center pt-10">
                         <CustomButton
                             title="Create link"
-                            containerStyles="bg-primary-50 w-full"
+                            containerStyles="bg-primary-50 w-full min-h-[62px]"
                             textStyles="text-neutral"
                             isLoading={isSubmitting}
                             handlePress={handleSubmit}

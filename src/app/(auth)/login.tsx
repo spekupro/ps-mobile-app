@@ -9,7 +9,7 @@ import icons from '@/src/common/constants/icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useRouter } from 'expo-router';
 import { useGlobalContext } from '@/src/context/GlobalProvider';
-import useDokobitAuth from '@/src/hooks/useDokobitAuth';
+import useDokobitAuth from '@/src/components/auth/hooks/useDokobitAuth';
 import DokobitAuth from '@/src/components/auth/DokobitAuth';
 import apiClient from '@/src/services/api.client';
 
@@ -50,7 +50,7 @@ const validationSchema = yup.object().shape({
 });
 
 function LoginScreen() {
-    const { setIsLoggedIn } = useGlobalContext();
+    const { setIsLoggedIn, setUser } = useGlobalContext();
     const [form, setForm] = useState<FormData>({ email: '', password: '' });
     const [errors, setErrors] = useState<FormErrors>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,10 +63,20 @@ function LoginScreen() {
         handleDokobitReturn,
     } = useDokobitAuth();
 
-    const handleAuthSuccess = () => {
-        setIsLoggedIn(true);
-        router.replace('/orders');
-        closeModal();
+    const handleAuthSuccess = async () => {
+        try {
+            // Fetch user profile after successful EID login
+            const AuthService = (await import('@/src/components/auth/services/auth.service')).default;
+            const profile = await AuthService.getProfile();
+            setUser(profile);
+
+            setIsLoggedIn(true);
+            router.replace('/orders');
+            closeModal();
+        } catch (error) {
+            console.error('Failed to fetch profile:', error);
+            handleAuthError('Failed to load user profile');
+        }
     };
 
     const handleAuthError = (error: string) => {
@@ -78,8 +88,6 @@ function LoginScreen() {
     }, []);
 
     const submit = useCallback(async () => {
-        // setIsLoggedIn(true);
-        // router.replace('/orders');
         setErrors({});
 
         try {
@@ -104,6 +112,12 @@ function LoginScreen() {
                 email: form.email,
                 password: form.password,
             });
+
+            // Fetch user profile after successful login
+            const AuthService = (await import('@/src/components/auth/services/auth.service')).default;
+            const profile = await AuthService.getProfile();
+            setUser(profile);
+
             setIsLoggedIn(true);
             router.replace('/orders');
         } catch (error) {
@@ -113,7 +127,7 @@ function LoginScreen() {
         } finally {
             setIsSubmitting(false);
         }
-    }, [form, setIsLoggedIn, router]);
+    }, [form, setIsLoggedIn, setUser, router]);
 
     return (
         <KeyboardAwareScrollView
@@ -170,14 +184,14 @@ function LoginScreen() {
                 <View className="flex-row justify-between">
                     <CustomButton
                         title="Log in"
-                        containerStyles="bg-primary-50 w-[150px] mt-7"
+                        containerStyles="bg-primary-50 w-[150px] mt-7 min-h-[62px]"
                         textStyles="text-neutral"
                         handlePress={submit}
                         isLoading={isSubmitting}
                     />
                     <CustomButton
                         title="Log in with e-ID"
-                        containerStyles="border-2 border-neutral-30 w-[150px] mt-7"
+                        containerStyles="border-2 border-neutral-30 w-[150px] mt-7 min-h-[62px]"
                         textStyles="text-neutral-60"
                         handlePress={startDokobitAuthentication}
                         isLoading={isDokobitLoading}

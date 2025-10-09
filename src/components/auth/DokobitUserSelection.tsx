@@ -62,14 +62,14 @@ const DokobitUserSelection: React.FC<DokobitUserSelectionProps> = ({
                     <CustomButton
                         title="Continue"
                         handlePress={handleSubmit}
-                        containerStyles="bg-primary-50 mb-4"
+                        containerStyles="bg-primary-50 mb-4 min-h-[62px]"
                         textStyles="text-neutral"
                         isLoading={isLoading}
                     />
                     <CustomButton
                         title="Cancel"
                         handlePress={onCancel}
-                        containerStyles="border-2 border-neutral-30"
+                        containerStyles="border-2 border-neutral-30 min-h-[62px]"
                         textStyles="text-neutral-60"
                         isLoading={isLoading}
                     />

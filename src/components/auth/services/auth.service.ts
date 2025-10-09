@@ -1,6 +1,21 @@
-import apiClient from './api.client';
+import apiClient from '../../../services/api.client';
 import { DokobitLogin, DokobitSession } from '@/src/components/auth/interfaces/eid.interface';
 import { environment } from '@/src/common/constants/environment';
+
+export interface ProfileStore {
+    uuid: string;
+    name: string;
+    country?: string;
+}
+
+export interface ProfileBusiness {
+    uuid: string;
+    name: string;
+    stores: Array<{
+        uuid: string;
+        name: string;
+    }>;
+}
 
 export interface UserProfile {
     uuid: string;
@@ -11,11 +26,8 @@ export interface UserProfile {
     productionSession: boolean;
     secureSession: boolean;
     passwordChangeRequired: boolean;
-    business?: {
-        uuid: string;
-        name: string;
-        country?: string;
-    };
+    store?: ProfileStore;
+    business?: ProfileBusiness;
 }
 
 export class AuthService {

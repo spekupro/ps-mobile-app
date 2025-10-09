@@ -1,9 +1,9 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useGlobalContext } from '@/src/context/GlobalProvider';
-import AuthService from '@/src/services/auth.service';
-import { DokobitLogin, AuthStep, EidUser } from '@/src/components/auth/interfaces/eid.interface';
+import AuthService from '@/src/components/auth/services/auth.service';
+import { AuthStep, DokobitLogin, EidUser } from '@/src/components/auth/interfaces/eid.interface';
 
 interface UseDokobitAuthReturn {
     isLoading: boolean;
