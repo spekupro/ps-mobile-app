@@ -1,7 +1,7 @@
-import { EnvEnum } from './environment';
+import { EnvironmentEnum } from './environment';
 
 export const environment = {
-    name: EnvEnum.PRELIVE_PRODUCTION,
+    name: EnvironmentEnum.PRELIVE,
     apiURL: 'https://api.mainframe.prelive.montonio.com',
     dokobitIdGatewayURL: 'https://id.dokobit.com',
     salvBaseUrl: 'https://app.salv.com',

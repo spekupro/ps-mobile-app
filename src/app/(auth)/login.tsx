@@ -24,6 +24,8 @@ interface FormErrors {
     general?: string;
 }
 
+// TODO Test session timing out (try deleting the session from DB and make sure it redirects user to login)
+
 function getErrorMessage(error: unknown): string {
     if (error && typeof error === 'object' && 'response' in error) {
         const axiosError = error as { response?: { status?: number } };
