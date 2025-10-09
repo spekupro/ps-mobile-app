@@ -16,6 +16,7 @@
       }
     },
     "android": {
+      "package": "com.spegents.psmobileapp",
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       }
