@@ -8,13 +8,13 @@ const RootLayout = () => {
     return (
         <SafeAreaProvider>
             <GlobalProvider>
-                <StatusBar style="dark" />
                 <Stack>
                     <Stack.Screen name="index" options={{ headerShown: false }} />
                     <Stack.Screen name="(auth)" options={{ headerShown: false }} />
                     <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 </Stack>
             </GlobalProvider>
+            <StatusBar style="dark" />
         </SafeAreaProvider>
     );
 };

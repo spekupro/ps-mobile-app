@@ -78,9 +78,15 @@ module.exports = {
                     60: '#A9061A',
                 },
             },
-            fontFamily: {},
+            fontFamily: {
+                sans: ['Satoshi-Regular'],
+                light: ['Satoshi-Light'],
+                medium: ['Satoshi-Medium'],
+                semibold: ['Satoshi-Medium'],
+                bold: ['Satoshi-Bold'],
+                black: ['Satoshi-Black'],
+            },
         },
     },
-    plugins: [],
 };
 

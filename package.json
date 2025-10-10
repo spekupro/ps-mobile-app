@@ -13,7 +13,7 @@
     "ios": "APP_ENV=development expo run:ios",
     "ios:prelive": "APP_ENV=prelive expo run:ios",
     "ios:live": "APP_ENV=live expo run:ios",
-    "web": "APP_ENV=development expo start --web",
+    "web": "APP_ENV=development EXPO_WEBPACK_HOST=partner.montonio expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint"
   },

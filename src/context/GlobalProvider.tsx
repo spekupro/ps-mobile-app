@@ -50,7 +50,7 @@ const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
             }
         };
 
-        checkSession();
+        checkSession().then();
     }, []);
 
     // Auto-select first available store when user is set
