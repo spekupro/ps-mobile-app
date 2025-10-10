@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { OrderPaymentStatusEnum } from '@/src/components/orders/enums/order-payment-status.enum';
+import { mapOrderStatusToReadable } from '@/src/components/orders/helpers/order-status.mapper';
 
 interface StatusLozengeProps {
     status: OrderPaymentStatusEnum;
@@ -30,7 +31,7 @@ export const getOrderStatusColor = (status: OrderPaymentStatusEnum): 'main' | 'n
 
 const statusColors: Record<string, string> = {
     warning: 'text-warning-60 bg-warning-10',
-    success: 'text-success-60 bg-success-10',
+    success: 'text-success-50 bg-success-10',
     error: 'text-error-60 bg-error-10',
     neutral: 'text-neutral-60 bg-neutral-10',
 };
@@ -42,7 +43,7 @@ const StatusLozenge: React.FC<StatusLozengeProps> = ({ status, type }) => {
         <View className={`items-start`}>
             <Text
                 className={`text-xs p-1.5 rounded-xl shadow-sm shadow-neutral-20 ${colors}`}>
-                {status}
+                {mapOrderStatusToReadable(status)}
             </Text>
         </View>
     );

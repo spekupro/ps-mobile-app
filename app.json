@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Partner System Mobile App",
+    "name": "Montonio Partner System",
     "slug": "ps-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/images/montonio-logo-small-primary.png",
+    "icon": "./src/assets/images/montonio-app.logo.png",
     "scheme": "ps-mobile-app",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -18,23 +18,24 @@
     "android": {
       "package": "com.spegents.psmobileapp",
       "adaptiveIcon": {
+        "foregroundImage": "./src/assets/images/montonio-app.logo.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./src/assets/images/montonio-logo-primary.png"
+      "favicon": "./src/assets/images/montonio-app.logo.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./src/assets/images/montonio-logo-primary.png",
+          "image": "./src/assets/images/montonio-app.logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#260071"
+          "backgroundColor": "#ffffff"
         }
       ]
     ],
