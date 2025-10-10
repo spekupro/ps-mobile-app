@@ -1,4 +1,6 @@
 import { OrderPaymentStatusEnum } from '@/src/components/orders/enums/order-payment-status.enum';
+import { PaymentIntentStatusEnum } from '@/src/components/orders/enums/payment-intent-status.enum';
+import { RefundStatusEnum } from '../enums/refund-status.enum';
 
 export interface OrderInterface {
     uuid: string;
@@ -24,11 +26,11 @@ export interface OrderInterface {
     paymentIntents: [{
         createdAt: Date;
         amount: number;
-        status: OrderPaymentStatusEnum;
+        status: PaymentIntentStatusEnum;
     }];
     refunds: [{
         createdAt: Date;
         amount: number;
-        status: OrderPaymentStatusEnum;
+        status: RefundStatusEnum;
     }];
 }
